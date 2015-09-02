@@ -1,0 +1,2 @@
+# msbuildscmtasks
+MSBuild SCM Tasks
