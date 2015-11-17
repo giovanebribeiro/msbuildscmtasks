@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DirectoryPath Condition="'$(DirectoryPath)' == ''">$(MSBuildThisFileDirectory)</DirectoryPath>
+  </PropertyGroup>
+
+  <UsingTask AssemblyFile="$(DirectoryPath)\MSBuildSCMTasks.Bump.dll" TaskName="BumpVersion"/>
+
+
+</Project>
