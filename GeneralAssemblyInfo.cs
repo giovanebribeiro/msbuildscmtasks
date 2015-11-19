@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A set of MSBuild tasks to make SCM procedures")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else
