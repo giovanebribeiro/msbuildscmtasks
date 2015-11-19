@@ -15,8 +15,8 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             return line.Substring(line.IndexOf('(') + 2, line.LastIndexOf(')') - line.IndexOf('(') - 3);
         }
 
-        [ClassInitialize]
-        public static void InitTestFile(TestContext context)
+        [TestInitialize]
+        public void InitTestFile()
         {
             using (var writer = new StreamWriter(assemblyInfoPath))
             {
@@ -27,6 +27,12 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             // move file to correct place
             //
             //File.Copy(assemblyInfoTemp, assemblyInfoPath, true);
+        }
+
+        [TestCleanup]
+        public void DestroyTestFile()
+        {
+            File.Delete(assemblyInfoPath);
         }
 
         [TestMethod]
@@ -43,6 +49,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
 
         public void PatchAgainOption()
         {
+            Bump.Calc(assemblyInfoPath, "patch");
             Bump.Calc(assemblyInfoPath, "patch");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -67,6 +74,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinor()
         {
+            Bump.Calc(assemblyInfoPath, "minor");
             Bump.Calc(assemblyInfoPath, "patch");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -91,6 +99,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MinorAfterMajor()
         {
+            Bump.Calc(assemblyInfoPath, "major");
             Bump.Calc(assemblyInfoPath, "minor");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -103,6 +112,8 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinor2()
         {
+            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "minor");
             Bump.Calc(assemblyInfoPath, "patch");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -115,6 +126,9 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinorAgain()
         {
+            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "patch");
             Bump.Calc(assemblyInfoPath, "patch");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -127,6 +141,10 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MinorAfterPatch()
         {
+            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "patch");
             Bump.Calc(assemblyInfoPath, "minor");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
@@ -140,18 +158,17 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         public void MajorTo2()
         {
             Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "major");
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
                 Assert.AreEqual("2.0.0", versionNumber);
             }
-        }
-
-        [ClassCleanup]
-        public static void DestroyTestFile()
-        {
-            File.Delete(assemblyInfoPath);
         }
 
         /*
