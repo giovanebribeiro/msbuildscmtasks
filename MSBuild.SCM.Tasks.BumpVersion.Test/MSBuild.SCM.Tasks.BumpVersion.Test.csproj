@@ -35,6 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -57,6 +62,10 @@
     <ProjectReference Include="..\MSBuild.SCM.Tasks.BumpVersion\MSBuild.SCM.Tasks.BumpVersion.csproj">
       <Project>{94a9cd94-3717-4b72-a435-54884ee08bb1}</Project>
       <Name>MSBuild.SCM.Tasks.BumpVersion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MSBuild.SCM.Tasks.Util\MSBuild.SCM.Tasks.Util.csproj">
+      <Project>{29b2a64f-312b-4d4a-a041-a2d387eb03d4}</Project>
+      <Name>MSBuild.SCM.Tasks.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

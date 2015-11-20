@@ -47,9 +47,11 @@
     <Compile Include="..\GeneralAssemblyInfo.cs">
       <Link>Properties\GeneralAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\Add.cs" />
+    <Compile Include="GitAdd.cs" />
     <Compile Include="GitStatus.cs" />
-    <Compile Include="Status.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="Commands\Status.cs" />
+    <Compile Include="Commands\Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -171,6 +171,17 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
+        [TestMethod]
+        public void TaskTest()
+        {
+            BumpVersion t = new BumpVersion();
+            t.BuildEngine = new DummyBuildEngine();
+
+            bool result = t.Execute();
+
+            Assert.IsTrue(result, "Execution failed");
+        }
+
         /*
         [ClassCleanup]
         public void RestoreOldVersion()

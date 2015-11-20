@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSBuild.SCM.Tasks.BumpVersion
 {
-    class BumpVersion:Microsoft.Build.Utilities.Task
+    public class BumpVersion:Microsoft.Build.Utilities.Task
     {
         /// <summary>
         /// Path to AssemblyInfo.cs file

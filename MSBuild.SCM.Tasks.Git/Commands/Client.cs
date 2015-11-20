@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.Git
+namespace MSBuild.SCM.Tasks.Git.Commands
 {
     public class Client
     {

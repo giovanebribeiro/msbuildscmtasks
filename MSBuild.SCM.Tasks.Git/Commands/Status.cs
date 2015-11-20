@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.Git
+namespace MSBuild.SCM.Tasks.Git.Commands
 {
     public class Status
     {

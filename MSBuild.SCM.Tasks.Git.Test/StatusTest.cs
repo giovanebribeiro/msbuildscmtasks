@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using MSBuild.SCM.Tasks.Git.Commands;
 
 namespace MSBuild.SCM.Tasks.Git.Test
 {

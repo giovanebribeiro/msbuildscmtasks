@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks.Git", "MS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks.Git.Test", "MSBuild.SCM.Tasks.Git.Test\MSBuild.SCM.Tasks.Git.Test.csproj", "{EC55C799-E59E-41B3-9AA4-6A4A8C70DBE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks", "MSBuild.SCM.Tasks\MSBuild.SCM.Tasks.csproj", "{29B2A64F-312B-4D4A-A041-A2D387EB03D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks.Util", "MSBuild.SCM.Tasks.Util\MSBuild.SCM.Tasks.Util.csproj", "{29B2A64F-312B-4D4A-A041-A2D387EB03D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
