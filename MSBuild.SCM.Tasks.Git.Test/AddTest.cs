@@ -9,11 +9,12 @@ namespace MSBuild.SCM.Tasks.Git.Test
     [TestClass]
     public class AddTest
     {
-        private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo";
+        private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Add";
         [ClassInitialize]
         public static void CreateDummyRepo(TestContext context)
         {
             Directory.CreateDirectory(dummyRepo);
+            Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
             Client.Instance.ExecCommand("init " + dummyRepo);
         }
@@ -21,7 +22,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassCleanup]
         public static void DeleteDummyRepo()
         {
-            Directory.Delete(dummyRepo, true);
+            //Directory.Delete(dummyRepo, true);
         }
 
         [TestMethod]
@@ -31,10 +32,19 @@ namespace MSBuild.SCM.Tasks.Git.Test
             using (var writer = new StreamWriter(contentFile1))
             {
                 writer.WriteLine("File content for file 1");
-
-                List<string> output = Add.ExecCommand(false, new string[] { contentFile1 });
-                Assert.AreEqual("0", output.Count + "");
+                writer.Close();
             }
+            List<string> output = Add.ExecCommand(false, new string[] { contentFile1 });
+
+            // check output
+            output = Status.ExecCommand();
+            Assert.AreEqual("# On branch master", output[0]);
+            Assert.AreEqual("#", output[1]);
+            Assert.AreEqual("# Initial commit", output[2]);
+            Assert.AreEqual("#", output[3]);
+            Assert.AreEqual("# Changes to be committed:", output[4]);
+            Assert.AreEqual("#\tnew file:  testFile1.txt", output[6]);
+            Assert.AreEqual("#", output[7]);
         }
 
         [TestMethod]

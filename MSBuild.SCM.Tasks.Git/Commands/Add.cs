@@ -19,7 +19,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             {
                 foreach (string file in files)
                 {
-                    command += " file ";
+                    command += " "+file;
                 }
             }
 

@@ -13,8 +13,10 @@ namespace MSBuild.SCM.Tasks.Git.Commands
     public class Client
     {
         private static Client instance;
+        private static List<string> Stdout;
         private string GitPath { get; set; }
 
+        #region singleton implementation
         public static Client Instance
         {
             get
@@ -31,6 +33,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
         {
             DefineGitPath();
         }
+        #endregion
 
         private void DefineGitPath()
         {
@@ -85,6 +88,10 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             }
         }
 
+        static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Stdout.Add(e.Data);
+        }
 
         public List<string> ExecCommand(string args)
         {
@@ -92,39 +99,54 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             Console.WriteLine("gitPath = "+GitPath);
             Console.WriteLine("args = " + args);
 #endif
-            Process gitProcess = new Process
+            ProcessStartInfo psinfo = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = GitPath,
-                    Arguments = args,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
+                FileName = GitPath,
+                Arguments = args,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
             };
 
-            gitProcess.Start();
-            List<string> gitOutput = null;
-            if (gitProcess.StandardOutput != null)
+            Stdout = new List<string>();// clear the buffer.
+
+            using (Process gitProcess = new Process())
             {
-                gitOutput = new List<string>();
-            }
+                gitProcess.StartInfo = psinfo;
+                gitProcess.OutputDataReceived += new DataReceivedEventHandler(p_OutputDataReceived);
 
-            while (!gitProcess.StandardOutput.EndOfStream)
-            {
-                string line = gitProcess.StandardOutput.ReadLine();
-                //if (line.Equals("------------------------ >8 ------------------------"))
-                //{
-                //    gitLogs.Add(gitOutput.ToString());
-                //    gitOutput.Clear(); //clear for next log
-                //    continue; //next iteration
-                //}
+                bool started = gitProcess.Start();
 
-                gitOutput.Add(line);
-            }
+                gitProcess.BeginOutputReadLine();
+                gitProcess.WaitForExit();
 
-            return gitOutput;
+                return Stdout;
+
+
+                /*
+                List<string> gitOutput = null;
+                if (gitProcess.StandardOutput != null)
+                {
+                    gitOutput = new List<string>();
+                }
+
+                while (!gitProcess.StandardOutput.EndOfStream)
+                {
+                    string line = gitProcess.StandardOutput.ReadLine();
+                    //if (line.Equals("------------------------ >8 ------------------------"))
+                    //{
+                    //    gitLogs.Add(gitOutput.ToString());
+                    //    gitOutput.Clear(); //clear for next log
+                    //    continue; //next iteration
+                    //}
+
+                    gitOutput.Add(line);
+                }
+                gitProcess.WaitForExit();
+                */
+            };
+
+            
         }
     }
 }

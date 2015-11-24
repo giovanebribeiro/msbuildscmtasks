@@ -174,7 +174,10 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void TaskTest()
         {
-            BumpVersion t = new BumpVersion();
+            BumpVersion t = new BumpVersion
+            {
+                AssemblyInfoPath = assemblyInfoPath
+            };
             t.BuildEngine = new DummyBuildEngine();
 
             bool result = t.Execute();

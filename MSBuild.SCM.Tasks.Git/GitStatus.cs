@@ -14,7 +14,10 @@ namespace MSBuild.SCM.Tasks.Git
             List<string> output = Status.ExecCommand();
             foreach (string line in output)
             {
-                Log.LogMessage(line);
+                if (line != null)
+                {
+                    Log.LogMessage(line);
+                }
             }
 
             return true;
