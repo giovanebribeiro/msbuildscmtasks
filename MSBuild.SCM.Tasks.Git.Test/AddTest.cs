@@ -22,7 +22,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassCleanup]
         public static void DeleteDummyRepo()
         {
-            //Directory.Delete(dummyRepo, true);
+            Directory.Delete(dummyRepo, true);
         }
 
         [TestMethod]
@@ -39,12 +39,9 @@ namespace MSBuild.SCM.Tasks.Git.Test
             // check output
             output = Status.ExecCommand();
             Assert.AreEqual("# On branch master", output[0]);
-            Assert.AreEqual("#", output[1]);
             Assert.AreEqual("# Initial commit", output[2]);
-            Assert.AreEqual("#", output[3]);
             Assert.AreEqual("# Changes to be committed:", output[4]);
-            Assert.AreEqual("#\tnew file:  testFile1.txt", output[6]);
-            Assert.AreEqual("#", output[7]);
+            Assert.IsTrue(output[7].Contains("testFile1.txt"));
         }
 
         [TestMethod]
@@ -64,15 +61,38 @@ namespace MSBuild.SCM.Tasks.Git.Test
                 writer4.WriteLine("File content for file 4");
                 writer5.WriteLine("File content for file 5");
 
-                List<string> output = Add.ExecCommand(true, null);
-                Assert.AreEqual("0", output.Count + "");
+                writer5.Close();
+                writer4.Close();
+                writer3.Close();
+                writer2.Close();
             }
+            List<string> output = Add.ExecCommand(true, null);
+
+            output = Status.ExecCommand();
+            Assert.AreEqual("# On branch master", output[0]);
+            Assert.AreEqual("# Initial commit", output[2]);
+            Assert.AreEqual("# Changes to be committed:", output[4]);
+            Assert.IsTrue(output[7].Contains("testFile1.txt"));
+            Assert.IsTrue(output[8].Contains("testFile2.txt"));
+            Assert.IsTrue(output[9].Contains("testFile3.txt"));
+            Assert.IsTrue(output[10].Contains("testFile4.txt"));
+            Assert.IsTrue(output[11].Contains("testFile5.txt"));
         }
 
         [TestMethod]
-        public void TaskTest()
+        public void TaskAddTest()
         {
-            GitAdd t = new GitAdd();
+            string contentFile1 = dummyRepo + "\\testFile1.txt";
+            using (var writer = new StreamWriter(contentFile1))
+            {
+                writer.WriteLine("File content for file 6");
+                writer.Close();
+            }
+
+            GitAdd t = new GitAdd
+            {
+                All = true
+            };
             t.BuildEngine = new DummyBuildEngine();
 
             bool result = t.Execute();

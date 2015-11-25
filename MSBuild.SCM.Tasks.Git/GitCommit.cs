@@ -19,7 +19,10 @@ namespace MSBuild.SCM.Tasks.Git
             List<string> output = Commit.ExecCommand(Add, Message, FileList);
             foreach (string line in output)
             {
-                Log.LogMessage(line);
+                if (line != null)
+                {
+                    Log.LogMessage(line);
+                }                
             }
             return true;
         }

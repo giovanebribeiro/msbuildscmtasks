@@ -22,7 +22,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassCleanup]
         public static void DeleteDummyRepo()
         {
-            //Directory.Delete(dummyRepo, true);
+            Directory.Delete(dummyRepo, true);
         }
 
 
@@ -40,7 +40,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
         }
 
         [TestMethod]
-        public void TaskTest()
+        public void TaskStatusTest()
         {
             GitStatus t = new GitStatus();
             t.BuildEngine = new DummyBuildEngine();

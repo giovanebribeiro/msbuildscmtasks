@@ -23,7 +23,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
                 message = "Adding new files to repo";
             }
 
-            command += "-m " + message + " ";
+            command += "-m \"" + message + "\" ";
 
             // putting the file list on command
             if (fileList!=null && fileList.Length > 0)
