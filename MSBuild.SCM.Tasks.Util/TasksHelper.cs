@@ -81,12 +81,12 @@ namespace MSBuild.SCM.Tasks
 
             // When we get here, all the files of the folder were
             // already deleted, so we just delete the empty folder
-            try {
+            //try {
                 Directory.Delete(path);
-            }catch(IOException e)
-            {
-                Console.WriteLine("error message:" + e.ToString());
-            }
+            //}catch(IOException e)
+            //{
+            //    Console.WriteLine("error message:" + e.ToString());
+            //}
         }
 
         public static string GetProductVersion(string assemblyInfoPath)
