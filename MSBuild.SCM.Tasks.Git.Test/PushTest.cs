@@ -14,6 +14,16 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassInitialize]
         public static void CreateDummyRepo(TestContext context)
         {
+            if (Directory.Exists(dummyRepo))
+            {
+                TasksHelper.DeleteDirectory(dummyRepo, true);
+            }
+
+            if (Directory.Exists(dummyRepoRemote))
+            {
+                TasksHelper.DeleteDirectory(dummyRepoRemote, true);
+            }
+
             // create remote repo
             Directory.CreateDirectory(dummyRepoRemote);
             Client.Instance.ExecCommand("init --bare " + dummyRepoRemote);
@@ -25,14 +35,6 @@ namespace MSBuild.SCM.Tasks.Git.Test
             //add remote repo in dummy repo
             Client.Instance.ExecCommand("remote add origin file://" + dummyRepoRemote);
         }
-
-        [ClassCleanup]
-        public static void DeleteDummyRepo()
-        {
-            Directory.Delete(dummyRepo, true);
-            Directory.Delete(dummyRepoRemote, true);
-        }
-
 
         [TestMethod]
         public void PushDefaultValues()

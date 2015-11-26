@@ -9,22 +9,20 @@ namespace MSBuild.SCM.Tasks.Git.Test
     [TestClass]
     public class StatusTest
     {
-        private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Status";
+        private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Status2";
         [ClassInitialize]
         public static void CreateDummyRepo(TestContext context)
         {
+            if (Directory.Exists(dummyRepo))
+            {
+                TasksHelper.DeleteDirectory(dummyRepo, true);
+            }
+
             Directory.CreateDirectory(dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
             Client.Instance.ExecCommand("init " + dummyRepo);
         }
-
-        [ClassCleanup]
-        public static void DeleteDummyRepo()
-        {
-            Directory.Delete(dummyRepo, true);
-        }
-
 
         [TestMethod]
         public void LibraryTest()

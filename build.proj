@@ -4,17 +4,9 @@
 	ToolsVersion="4.0"
 	>
   
-  <UsingTask 
-		AssemblyFile="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.dll"
-		TaskName="BumpVersion"
-	  />
-	  
-	  <!--UsingTask 
-		AssemblyFile="$(MSBuildProjectDirectory)\MSBuildSCMTasks.Changelog\bin\$(Configuration)\MSBuildSCMTasks.Changelog.dll"
-		TaskName="Changelog"
-	  /-->
-	
-	<PropertyGroup>
+  <Import Project = "$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Targets"/>
+  
+  <PropertyGroup>
 		<SolutionFile>./Giovanebribeiro.MSBuild.SCM.Tasks.sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestPath>
@@ -22,8 +14,9 @@
 		<DoubleQuotes>"</DoubleQuotes>
 		<TestResultsFile>TestResults\Results.trx</TestResultsFile>    
 	</PropertyGroup>
-
+  
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
 	
 	<Target Name="Clean">
 		<Message Text="Clean Projects"/>

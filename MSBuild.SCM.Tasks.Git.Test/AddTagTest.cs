@@ -16,16 +16,16 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassInitialize]
         public static void CreateDummyRepo(TestContext context)
         {
+            if (Directory.Exists(dummyRepo))
+            {
+                TasksHelper.DeleteDirectory(dummyRepo, true);
+            }
+
+
             Directory.CreateDirectory(dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
             Client.Instance.ExecCommand("init " + dummyRepo);
-        }
-
-        [ClassCleanup]
-        public static void DeleteDummyRepo()
-        {
-            Directory.Delete(dummyRepo, true);
         }
 
         [TestMethod]

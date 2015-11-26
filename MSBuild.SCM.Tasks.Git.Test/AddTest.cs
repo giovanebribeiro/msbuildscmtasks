@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Linq;
 using MSBuild.SCM.Tasks.Git.Commands;
 using System.Collections.Generic;
 
@@ -13,16 +14,16 @@ namespace MSBuild.SCM.Tasks.Git.Test
         [ClassInitialize]
         public static void CreateDummyRepo(TestContext context)
         {
+            if (Directory.Exists(dummyRepo))
+            {
+                TasksHelper.DeleteDirectory(dummyRepo, true);
+            }
+
+
             Directory.CreateDirectory(dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
             Client.Instance.ExecCommand("init " + dummyRepo);
-        }
-
-        [ClassCleanup]
-        public static void DeleteDummyRepo()
-        {
-            Directory.Delete(dummyRepo, true);
         }
 
         [TestMethod]
@@ -38,10 +39,9 @@ namespace MSBuild.SCM.Tasks.Git.Test
 
             // check output
             output = Status.ExecCommand();
-            Assert.AreEqual("# On branch master", output[0]);
-            Assert.AreEqual("# Initial commit", output[2]);
-            Assert.AreEqual("# Changes to be committed:", output[4]);
-            Assert.IsTrue(output[7].Contains("testFile1.txt"));
+            Assert.IsTrue((output.Single(s=> s!=null && s.Contains("On branch master"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("Initial commit"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile1.txt"))) != null);            
         }
 
         [TestMethod]
@@ -69,14 +69,12 @@ namespace MSBuild.SCM.Tasks.Git.Test
             List<string> output = Add.ExecCommand(true, null);
 
             output = Status.ExecCommand();
-            Assert.AreEqual("# On branch master", output[0]);
-            Assert.AreEqual("# Initial commit", output[2]);
-            Assert.AreEqual("# Changes to be committed:", output[4]);
-            Assert.IsTrue(output[7].Contains("testFile1.txt"));
-            Assert.IsTrue(output[8].Contains("testFile2.txt"));
-            Assert.IsTrue(output[9].Contains("testFile3.txt"));
-            Assert.IsTrue(output[10].Contains("testFile4.txt"));
-            Assert.IsTrue(output[11].Contains("testFile5.txt"));
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("On branch master"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("Initial commit"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile2.txt"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile3.txt"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile4.txt"))) != null);
+            Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile5.txt"))) != null);
         }
 
         [TestMethod]
