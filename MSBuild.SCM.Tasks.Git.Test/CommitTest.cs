@@ -71,13 +71,32 @@ namespace MSBuild.SCM.Tasks.Git.Test
         }
 
         [TestMethod]
+        public void AddTwoFilesButCommitOne()
+        {
+            string contentFile3 = dummyRepo + "\\testFile3.txt";
+            string contentFile4 = dummyRepo + "\\testFile4.txt";
+            using (var writer = new StreamWriter(contentFile3))
+            using (var writer2 = new StreamWriter(contentFile4))
+            {
+                writer.WriteLine("File content for file 3");
+                writer2.WriteLine("File content for file 4");
+                writer.Close();
+                writer2.Close();
+            }
+            List<string> output = Add.ExecCommand(false, new string[] { contentFile3, contentFile4 });
+
+            output = Commit.ExecCommand(false, "commit message", new string[] { contentFile3 });
+            Assert.IsTrue(output[2].Contains("create mode"));
+        }
+
+        [TestMethod]
         public void TaskCommitTest()
         {
             // create a file to commit
-            string contentFile3 = dummyRepo + "\\testFile3.txt";
-            using (var writer = new StreamWriter(contentFile3))
+            string contentFile4 = dummyRepo + "\\testFile4.txt";
+            using (var writer = new StreamWriter(contentFile4))
             {
-                writer.WriteLine("File content for file 3");
+                writer.WriteLine("File content for file 4");
                 writer.Close();
             }
 

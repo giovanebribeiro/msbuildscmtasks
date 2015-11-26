@@ -9,7 +9,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
 {
     public class Commit
     {
-        public static List<string> ExecCommand(bool add, string message, ITaskItem[] fileList)
+        public static List<string> ExecCommand(bool add, string message, string[] fileList)
         {
             string command = "commit ";
 
@@ -28,9 +28,9 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             // putting the file list on command
             if (fileList!=null && fileList.Length > 0)
             {
-                foreach (ITaskItem file in fileList)
+                foreach (string file in fileList)
                 {
-                    command += file.ItemSpec + " ";
+                    command += file + " ";
                 }
             }
 

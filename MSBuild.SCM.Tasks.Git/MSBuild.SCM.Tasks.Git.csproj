@@ -48,9 +48,13 @@
       <Link>Properties\GeneralAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Commands\Add.cs" />
+    <Compile Include="Commands\AddTag.cs" />
     <Compile Include="Commands\Commit.cs" />
+    <Compile Include="Commands\Push.cs" />
     <Compile Include="GitAdd.cs" />
+    <Compile Include="GitAddTag.cs" />
     <Compile Include="GitCommit.cs" />
+    <Compile Include="GitPush.cs" />
     <Compile Include="GitStatus.cs" />
     <Compile Include="Commands\Status.cs" />
     <Compile Include="Commands\Client.cs" />
