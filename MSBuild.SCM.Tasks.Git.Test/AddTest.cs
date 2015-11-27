@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
-using MSBuild.SCM.Tasks.Git.Commands;
+using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
 
 namespace MSBuild.SCM.Tasks.Git.Test
@@ -23,7 +23,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Directory.CreateDirectory(dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
-            Client.Instance.ExecCommand("init " + dummyRepo);
+            ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
         [TestMethod]

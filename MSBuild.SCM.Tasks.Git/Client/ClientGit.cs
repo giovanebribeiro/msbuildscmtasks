@@ -7,29 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Build.Utilities;
 
-namespace MSBuild.SCM.Tasks.Git.Commands
+namespace MSBuild.SCM.Tasks.Git.Client
 {
-    public class Client
+    /// <summary>
+    /// Represents a Git client
+    /// </summary>
+    public class ClientGit
     {
-        private static Client instance;
+        private static ClientGit instance;
         private static List<string> Stdout;
         private string GitPath { get; set; }
 
         #region singleton implementation
-        public static Client Instance
+        public static ClientGit Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new Client();
+                    instance = new ClientGit();
                 }
                 return instance;
             }
         }
 
-        private Client()
+        private ClientGit()
         {
             DefineGitPath();
         }
@@ -88,11 +92,17 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             }
         }
 
+        #region Start process to exec command
         static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             Stdout.Add(e.Data);
         }
 
+        /// <summary>
+        /// Execute a general git command
+        /// </summary>
+        /// <param name="args">The command arguments</param>
+        /// <returns>A list of strings with the command output</returns>
         public List<string> ExecCommand(string args)
         {
 #if DEBUG 
@@ -121,32 +131,67 @@ namespace MSBuild.SCM.Tasks.Git.Commands
                 gitProcess.WaitForExit();
 
                 return Stdout;
-
-
-                /*
-                List<string> gitOutput = null;
-                if (gitProcess.StandardOutput != null)
-                {
-                    gitOutput = new List<string>();
-                }
-
-                while (!gitProcess.StandardOutput.EndOfStream)
-                {
-                    string line = gitProcess.StandardOutput.ReadLine();
-                    //if (line.Equals("------------------------ >8 ------------------------"))
-                    //{
-                    //    gitLogs.Add(gitOutput.ToString());
-                    //    gitOutput.Clear(); //clear for next log
-                    //    continue; //next iteration
-                    //}
-
-                    gitOutput.Add(line);
-                }
-                gitProcess.WaitForExit();
-                */
             };
+        }
+        #endregion
 
-            
+        #region get the url of repository
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gitClient"></param>
+        /// <returns></returns>
+        public string GetRepoURL()
+        {
+            string repoURL = "";
+
+            string line = this.ExecCommand("remote -v").First();
+
+            // first possibility: http/https protocol
+            if (line.Contains("http"))
+            {
+                //line example: "origin  https://github.com/giovanebribeiro/politex.git (fetch)"
+                repoURL = Regex.Split(line, "\\s+")[1].Trim();
+            }
+            else if (line.Contains("git"))
+            {
+                // line example: "origin  git@github.com:giovanebribeiro/politex.git (fetch)"
+
+                // 1 - get the domain
+                Regex pattern = new Regex("@[a-z0-9]+\\.[a-z0-9]+:");
+                Match match = pattern.Match(line);
+                string domain = match.Groups[0].Value.ToString();
+                domain = domain.Remove(0, 1); //remove the '@'
+                domain = domain.Remove(domain.Length - 1, 1); // remote the ':'
+
+                // 2 - get the username and repo
+                pattern = new Regex(":[a-zA-Z0-9\\./]+\\s*\\(");
+                match = pattern.Match(line);
+                string usernameAndRepo = match.Groups[0].Value.ToString();
+                usernameAndRepo = usernameAndRepo.Remove(0, 1); //remove the ':'
+                usernameAndRepo = usernameAndRepo.Remove(usernameAndRepo.Length - 1, 1); // remote the '('
+                usernameAndRepo = usernameAndRepo.Trim();
+
+                // 3 - join all
+                repoURL = "https://" + domain + "/" + usernameAndRepo;
+            }
+            else if (line.Contains("file://"))
+            {
+                repoURL = Regex.Split(line, "\\s+")[1].Trim();
+            }
+
+            return repoURL;
+        }
+        #endregion
+
+        public string GetMostRecentTag()
+        {
+            string mostRecentTag = this.ExecCommand("log --tags --simplify-by-decoration --pretty=format:\"%d\"").First();
+            Regex pattern = new Regex("v\\d{1,}\\.\\d{1,}\\.\\d{1,}");
+            Match match = pattern.Match(mostRecentTag);
+            mostRecentTag = match.Groups[0].Value.ToString();
+
+            return mostRecentTag;
         }
     }
 }

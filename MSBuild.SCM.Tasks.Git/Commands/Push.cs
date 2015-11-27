@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.Git.Commands
+namespace MSBuild.SCM.Tasks.Git.Client
 {
     public class Push
     {
@@ -22,7 +22,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             }
 
             command += branchOrigin + " " + branch; 
-            return Client.Instance.ExecCommand(command);
+            return ClientGit.Instance.ExecCommand(command);
         }
     }
 }

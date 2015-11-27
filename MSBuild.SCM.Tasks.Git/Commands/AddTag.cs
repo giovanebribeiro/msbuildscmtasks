@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.Git.Commands
+namespace MSBuild.SCM.Tasks.Git.Client
 {
     public class AddTag
     {
@@ -30,7 +30,7 @@ namespace MSBuild.SCM.Tasks.Git.Commands
             tagMessage = Regex.Replace(tagMessage, "%VERSION%", version);
 
             string command = "tag -a " + tagPattern + " -m \"" + tagMessage + "\"";
-            List<string> output = Client.Instance.ExecCommand(command);
+            List<string> output = ClientGit.Instance.ExecCommand(command);
             return output;
         }
 

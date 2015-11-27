@@ -1,4 +1,4 @@
-﻿using MSBuild.SCM.Tasks.Git.Commands;
+﻿using MSBuild.SCM.Tasks.Git.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;

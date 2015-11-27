@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using MSBuild.SCM.Tasks.Git.Commands;
+using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
 
 namespace MSBuild.SCM.Tasks.Git.Test
@@ -26,14 +26,14 @@ namespace MSBuild.SCM.Tasks.Git.Test
 
             // create remote repo
             Directory.CreateDirectory(dummyRepoRemote);
-            Client.Instance.ExecCommand("init --bare " + dummyRepoRemote);
+            ClientGit.Instance.ExecCommand("init --bare " + dummyRepoRemote);
 
             //init empty repo
-            Client.Instance.ExecCommand("init " + dummyRepo);
+            ClientGit.Instance.ExecCommand("init " + dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
 
             //add remote repo in dummy repo
-            Client.Instance.ExecCommand("remote add origin file://" + dummyRepoRemote);
+            ClientGit.Instance.ExecCommand("remote add origin file://" + dummyRepoRemote);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
         public void PushToAnotherBranch()
         {
             // create a new branch
-            List<string> output = Client.Instance.ExecCommand("checkout -b another");
+            List<string> output = ClientGit.Instance.ExecCommand("checkout -b another");
             //Assert.IsTrue(output.Count > 1);
 
             // create the file

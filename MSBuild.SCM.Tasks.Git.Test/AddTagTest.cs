@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using MSBuild.SCM.Tasks.Git.Commands;
+using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
 
 namespace MSBuild.SCM.Tasks.Git.Test
@@ -25,7 +25,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Directory.CreateDirectory(dummyRepo);
             Directory.SetCurrentDirectory(dummyRepo);
             //init empty repo
-            Client.Instance.ExecCommand("init " + dummyRepo);
+            ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
         [TestMethod]
@@ -44,7 +44,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             // create tag:
             output = AddTag.ExecCommand(null, "0.0.0", null);
             //check results
-            output = Client.Instance.ExecCommand("tag");
+            output = ClientGit.Instance.ExecCommand("tag");
             Assert.AreEqual("v0.0.0", output.Single(s => (s != null && s.Contains("v0.0.0"))));
         }
 
@@ -63,7 +63,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
 
             //create tag
             output = AddTag.ExecCommand("r%VERSION%", "0.0.1", null);
-            output = Client.Instance.ExecCommand("tag");
+            output = ClientGit.Instance.ExecCommand("tag");
             Assert.AreEqual("r0.0.1", output.Single(s=>(s!=null && s.Contains("r0.0.1"))));
         }
 
@@ -82,7 +82,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
 
             // create tag
             output = AddTag.ExecCommand(null, "0.0.2", "New Release with version %VERSION%");
-            output = Client.Instance.ExecCommand("tag -n1");
+            output = ClientGit.Instance.ExecCommand("tag -n1");
             string line = output.Single(s => (s!=null && s.Contains("New Release with version 0.0.2")));
             Assert.IsTrue(line != null);
         }
