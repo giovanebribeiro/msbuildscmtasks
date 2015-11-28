@@ -1,0 +1,85 @@
+<Project 
+	DefaultTargets="All"
+	xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	ToolsVersion="4.0"
+	>
+  
+  <Import Project = "$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Targets"/>
+  
+  <PropertyGroup>
+		<SolutionFile>./Giovanebribeiro.MSBuild.SCM.Tasks.sln</SolutionFile>	
+		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestPath>
+		<OutputPath>$(MSBuildProjectDirectory)\Output</OutputPath>
+		<DoubleQuotes>"</DoubleQuotes>
+		<TestResultsFile>TestResults\Results.trx</TestResultsFile>    
+	</PropertyGroup>
+  
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
+	
+	<Target Name="Clean">
+		<Message Text="Clean Projects"/>
+		<MSBuild Projects="$(SolutionFile)" Targets="Clean"/>
+		<Delete Files="$(TestResultsFile)"/>
+    <RemoveDir Directories="$(OutputPath)"/>
+	</Target>
+	
+	<Target Name="Compile" DependsOnTargets="Clean">
+		<Message Text="Build Files"/>
+		<MSBuild 
+		Projects="$(SolutionFile)"
+		Properties="Configuration=$(Configuration)"
+		/>
+	</Target>
+	
+	<Target Name="RunTests" DependsOnTargets="Compile">
+		<PropertyGroup>
+			<MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"$(TestResultsFile)"</MSTestCommand>
+		</PropertyGroup>
+		
+		<!--Message Text=">>>>>>>>>>>>>>>>>>>>>> MsTestCommand: $(MSTestCommand)"/-->
+		
+		<Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
+	</Target>
+
+  <Target Name="Pack" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">    
+    <Message Text="Create the Output folder..."/>
+    <MakeDir Directories="$(OutputPath)"/>
+    
+    <Message Text ="Copy the app DLLs to output folder..."/>
+    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="$(OutputPath)"/>
+  </Target>
+    
+  <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+		<!-- Bump version -->
+		<!--BumpVersion Option="generate_and_tag" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+	</Target>
+  
+  <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'"/>
+	
+	<Target Name="All">	
+		<Message Text=""/>
+		<Message Text="MSBuildSCMTasks build process"/>
+		<Message Text="Usage: msbuild .\build.proj [/p:Configuration='Debug|Release'] [/p:Bump='major|minor|patch'] /t:'task_name'"/>
+		<Message Text="-----------------------------------------------------------------------------"/>
+		<Message Text="|  Task Name        |    Description                                        |"/>
+		<Message Text="|-------------------|-------------------------------------------------------|"/>
+		<Message Text="| Clean             | * Clean the old compiled files                        |"/>
+		<Message Text="|-------------------|-------------------------------------------------------|"/>
+		<Message Text="| Compile           | * Clean the old compiled files                        |"/>
+		<Message Text="|                   | * Compile the project and generates the new files     |"/>
+		<Message Text="|-------------------|-------------------------------------------------------|"/>
+		<Message Text="| RunTests          | * Clean the old compiled files                        |"/>
+		<Message Text="|                   | * Compile the project and generates the new files     |"/>
+		<Message Text="|                   | * Run all tests                                       |"/>
+    <Message Text="|-------------------|-------------------------------------------------------|"/>
+    <Message Text="| Build (only works | * Clean the old compiled files                        |"/>
+    <Message Text="|    with 'Release' | * Compile the project and generates the new files     |"/>
+    <Message Text="|    configuration) | * Run all tests                                       |"/>
+		<Message Text="|                   | * Pack the files                                      |"/>
+		<Message Text="-----------------------------------------------------------------------------"/>
+    <Message Text=""/>
+	</Target>
+	
+</Project>

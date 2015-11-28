@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <TestAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git.Test\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.Test.dll"/>
+    <AppAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll"></AppAssemblies>
+  </ItemGroup>
+</Project>
+    
