@@ -43,20 +43,40 @@ namespace MSBuild.SCM.Tasks.Git.Client
         {
             if (GitPath == null)
             {
-                //Option 1: In registry
+                string complement = "\\bin\\git.exe";
+
+
+                //found git path in registry.
                 bool gitIsInRegistry = true;
                 string registryKeyString = @"SOFTWARE";
-                Microsoft.Win32.RegistryKey registryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(registryKeyString);
-                if (registryKey == null)
+                Microsoft.Win32.RegistryKey registryKeyLocalMachine = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(registryKeyString);
+                Microsoft.Win32.RegistryKey registryKeyCurrentUser = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);
+
+                //option1: Git-Cheetah
+                RegistryKey subKey = registryKeyLocalMachine.OpenSubKey("Git-Cheetah");
+                if(subKey != null)
                 {
-                    registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);
-                    if (registryKey == null)
-                    {
-                        gitIsInRegistry = false;
-                    }
+                    GitPath = subKey.GetValue("PathToMsys").ToString() + complement;
+                    return;
                 }
 
+                // option2: TortoiseGit
+                subKey = registryKeyCurrentUser.OpenSubKey("TortoiseGit");
+                if (subKey != null)
+                {
+                    object value = subKey.GetValue("MSysGit");
+                    GitPath = value.ToString() + "\\git.exe";
+                    return;
+                } 
+
+                    
+                //if git path not found in registry, throw an exception
+                throw new InvalidOperationException("The git path wasn't informed and not present in registry or ProgramFiles folder. Please install git or inform the correct git path using the 'GitPath' attribute in task.");
+                
+
+                /*
                 // Option 2: In Program Files
+
                 bool gitIsInProgramFiles = true;
                 if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "Git"))
                 {
@@ -70,14 +90,8 @@ namespace MSBuild.SCM.Tasks.Git.Client
                     gitIsInProgramFilesx86 = false;
                 }
 
-                string complement = "\\bin\\git.exe";
-                if (gitIsInRegistry)
-                {
-                    registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);
-                    RegistryKey subKey = registryKey.OpenSubKey("Git-Cheetah");
-                    GitPath = subKey.GetValue("PathToMsys").ToString()+complement;
-                }
-                else if (gitIsInProgramFiles)
+                
+                if (gitIsInProgramFiles)
                 {
                     GitPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "Git" + complement;
                 }
@@ -85,10 +99,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 {
                     GitPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "Git" + complement;
                 }
-                else
-                {
-                    throw new InvalidOperationException("The git path wasn't informed and not present in registry or ProgramFiles folder. Please install git or inform the correct git path using the 'GitPath' attribute in task.");
-                }
+                */
             }
         }
 
