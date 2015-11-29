@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <TestAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog.Test\bin\$(Configuration)\MSBuild.SCM.Tasks.Changelog.Test.dll"/>
+    <AppAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog\bin\$(Configuration)\MSBuild.SCM.Tasks.Changelog.dll"></AppAssemblies>
+  </ItemGroup>
+</Project>

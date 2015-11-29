@@ -7,5 +7,6 @@
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\Git\MSBuild.SCM.Tasks.Git.dll" TaskName="GitCommit"/>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\Git\MSBuild.SCM.Tasks.Git.dll" TaskName="GitPush"/>
   <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\Git\MSBuild.SCM.Tasks.Git.dll" TaskName="GitStatus"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\Git\MSBuild.SCM.Tasks.Changelog.dll" TaskName="Changelog"/>
 
 </Project>
