@@ -36,22 +36,45 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                             string versionNumber = GetVersionNumber(line);
 
                             string[] version = Regex.Split(versionNumber, "\\.");
-                            int major = Convert.ToInt16(version[0]);
-                            int minor = Convert.ToInt16(version[1]);
-                            int patch = Convert.ToInt16(version[2]);
-
-                            option = (option == null) ? "patch" : option;
-                            if (option.Equals("patch"))
+                            int major = 0;
+                            int minor = 0;
+                            int patch = 0;
+                            int build = 0;
+                            if (version.Length >= 3 && version.Length <= 4)
                             {
+                                major = Convert.ToInt16(version[0]);
+                                minor = Convert.ToInt16(version[1]);
+                                patch = Convert.ToInt16(version[2]);
+
+                                if(version.Length == 4)
+                                {
+                                    build = Convert.ToInt16(version[3]);
+                                }
+                            }
+                            else
+                            {
+                                throw new IndexOutOfRangeException("Version in wrong format!");
+                            }
+                            
+                            option = (option == null) ? "patch" : option;
+                            if (option.Equals("build"))
+                            {
+                                build++;
+                            }
+                            else if (option.Equals("patch"))
+                            {
+                                build = 0;
                                 patch++;
                             }
                             else if (option.Equals("minor"))
                             {
+                                build = 0;
                                 patch = 0;
                                 minor++;
                             }
                             else if (option.Equals("major"))
                             {
+                                build = 0;
                                 patch = 0;
                                 minor = 0;
                                 major++;
@@ -61,7 +84,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                                 throw new InvalidDataException("Invalid option: " + option);
                             }
 
-                            newVersion = major + "." + minor + "." + patch;
+                            newVersion = major + "." + minor + "." + patch+"."+build;
                             line = line.Replace(versionNumber, newVersion);
                         }
 

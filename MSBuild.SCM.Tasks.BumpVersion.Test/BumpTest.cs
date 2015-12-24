@@ -36,6 +36,18 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         }
 
         [TestMethod]
+        public void BuildOption()
+        {
+            Bump.Calc(assemblyInfoPath, "build");
+            using (var reader = new StreamReader(assemblyInfoPath))
+            {
+                string line = reader.ReadLine();
+                string versionNumber = GetVersionNumber(line);
+                Assert.AreEqual("0.0.0.1", versionNumber);
+            }
+        }
+
+        [TestMethod]
         public void PatchOption()
         {
             Bump.Calc(assemblyInfoPath, "patch");
@@ -43,7 +55,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("0.0.1", versionNumber);
+                Assert.AreEqual("0.0.1.0", versionNumber);
             }
         }
 
@@ -55,7 +67,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("0.0.2", versionNumber);
+                Assert.AreEqual("0.0.2.0", versionNumber);
             }
         }
 
@@ -67,7 +79,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("0.1.0", versionNumber);
+                Assert.AreEqual("0.1.0.0", versionNumber);
             }
         }
 
@@ -80,7 +92,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("0.1.1", versionNumber);
+                Assert.AreEqual("0.1.1.0", versionNumber);
             }
         }
 
@@ -92,7 +104,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("1.0.0", versionNumber);
+                Assert.AreEqual("1.0.0.0", versionNumber);
             }
         }
 
@@ -105,7 +117,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("1.1.0", versionNumber);
+                Assert.AreEqual("1.1.0.0", versionNumber);
             }
         }
 
@@ -119,7 +131,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("1.1.1", versionNumber);
+                Assert.AreEqual("1.1.1.0", versionNumber);
             }
         }
 
@@ -134,7 +146,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("1.1.2", versionNumber);
+                Assert.AreEqual("1.1.2.0", versionNumber);
             }
         }
 
@@ -150,7 +162,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("1.2.0", versionNumber);
+                Assert.AreEqual("1.2.0.0", versionNumber);
             }
         }
 
@@ -167,7 +179,25 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             {
                 string line = reader.ReadLine();
                 string versionNumber = GetVersionNumber(line);
-                Assert.AreEqual("2.0.0", versionNumber);
+                Assert.AreEqual("2.0.0.0", versionNumber);
+            }
+        }
+
+        [TestMethod]
+        public void MajorTo2Build1()
+        {
+            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "build");
+            using (var reader = new StreamReader(assemblyInfoPath))
+            {
+                string line = reader.ReadLine();
+                string versionNumber = GetVersionNumber(line);
+                Assert.AreEqual("2.0.0.1", versionNumber);
             }
         }
 
