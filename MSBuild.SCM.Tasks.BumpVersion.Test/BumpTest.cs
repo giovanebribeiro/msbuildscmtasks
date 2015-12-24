@@ -8,7 +8,6 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
     public class BumpTest
     {
         private static string assemblyInfoPath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%")+"\\AssemblyTest.txt";
-        private string oldVersion = "";
 
         private string GetVersionNumber(string line)
         {
@@ -38,7 +37,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void BuildOption()
         {
-            Bump.Calc(assemblyInfoPath, "build");
+            Bump.Calc(assemblyInfoPath, "build", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -50,7 +49,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchOption()
         {
-            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "patch", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -59,10 +58,22 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
+        [TestMethod]
+        public void PatchOptionShowBuildOff()
+        {
+            Bump.Calc(assemblyInfoPath, "patch", false);
+            using (var reader = new StreamReader(assemblyInfoPath))
+            {
+                string line = reader.ReadLine();
+                string versionNumber = GetVersionNumber(line);
+                Assert.AreEqual("0.0.1", versionNumber);
+            }
+        }
+
         public void PatchAgainOption()
         {
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -74,7 +85,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MinorOption()
         {
-            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "minor", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -86,8 +97,8 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinor()
         {
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -99,7 +110,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MajorOption()
         {
-            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "major", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -111,8 +122,8 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MinorAfterMajor()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -124,9 +135,9 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinor2()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -138,10 +149,10 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void PatchAfterMinorAgain()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "patch");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -153,11 +164,11 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MinorAfterPatch()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "minor");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -169,12 +180,12 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MajorTo2()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "major");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "major", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();
@@ -186,13 +197,13 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
         [TestMethod]
         public void MajorTo2Build1()
         {
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "patch");
-            Bump.Calc(assemblyInfoPath, "minor");
-            Bump.Calc(assemblyInfoPath, "major");
-            Bump.Calc(assemblyInfoPath, "build");
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "patch", true);
+            Bump.Calc(assemblyInfoPath, "minor", true);
+            Bump.Calc(assemblyInfoPath, "major", true);
+            Bump.Calc(assemblyInfoPath, "build", true);
             using (var reader = new StreamReader(assemblyInfoPath))
             {
                 string line = reader.ReadLine();

@@ -3,18 +3,26 @@
 	xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
 	ToolsVersion="4.0"
 	>
-  
-  <Import Project = "$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Targets"/>
-  
+
   <PropertyGroup>
 		<SolutionFile>./Giovanebribeiro.MSBuild.SCM.Tasks.sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestPath>
 		<OutputPath>$(MSBuildProjectDirectory)\Output</OutputPath>
 		<DoubleQuotes>"</DoubleQuotes>
-		<TestResultsFile>TestResults\Results.trx</TestResultsFile>    
+		<TestResultsFile>TestResults\Results.trx</TestResultsFile>
+    <Bump Condition="'$(Bump)' == ''">patch</Bump>
 	</PropertyGroup>
-  
+
+  <!--Project tasks to be used-->
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.dll" TaskName="BumpVersion"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAdd"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAddTag"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitCommit"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitPush"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitStatus"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Changelog\bin\$(Configuration)\MSBuild.SCM.Tasks.Changelog.dll" TaskName="Changelog"/>
+
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog\Changelog.Targets"/>
@@ -53,8 +61,14 @@
   </Target>
     
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
-		<!-- Bump version -->
-		<!--BumpVersion Option="generate_and_tag" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    <!-- 1 - Bump version -->
+    <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    <!-- 2 - Update Changelog The default path is ".\CHANGELOG.md" -->
+    <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+    
+    <Message Text="Before command"/>
+    <Exec Command="notepad.exe .\CHANGELOG.md"/>
+    <Message Text="After command"/>
 	</Target>
   
   <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'"/>

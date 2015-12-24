@@ -20,7 +20,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion
             return assemblyInfoLine.Substring(assemblyInfoLine.IndexOf('(') + 2, assemblyInfoLine.LastIndexOf(')') - assemblyInfoLine.IndexOf('(') - 3);
         }
 
-        public static string Calc(string assemblyInfoPath, string option)
+        public static string Calc(string assemblyInfoPath, string option, bool showBuild)
         {
             string newVersion = null;
             string assemblyInfoTemp = assemblyInfoPath + ".temp";
@@ -84,7 +84,12 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                                 throw new InvalidDataException("Invalid option: " + option);
                             }
 
-                            newVersion = major + "." + minor + "." + patch+"."+build;
+                            newVersion = major + "." + minor + "." + patch;
+                            if (showBuild)
+                            {
+                                newVersion += "." + build;
+                            }
+
                             line = line.Replace(versionNumber, newVersion);
                         }
 

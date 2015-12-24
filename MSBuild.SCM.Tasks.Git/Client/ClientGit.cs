@@ -52,8 +52,17 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 Microsoft.Win32.RegistryKey registryKeyLocalMachine = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(registryKeyString);
                 Microsoft.Win32.RegistryKey registryKeyCurrentUser = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);
 
+                RegistryKey subKey = null;
+
                 //option1: Git-Cheetah
-                RegistryKey subKey = registryKeyLocalMachine.OpenSubKey("Git-Cheetah");
+                subKey = registryKeyLocalMachine.OpenSubKey("Git-Cheetah");
+                if (subKey != null)
+                {
+                    GitPath = subKey.GetValue("PathToMsys").ToString() + complement;
+                    return;
+                }
+
+                subKey = registryKeyCurrentUser.OpenSubKey("Git-Cheetah");
                 if(subKey != null)
                 {
                     GitPath = subKey.GetValue("PathToMsys").ToString() + complement;

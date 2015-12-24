@@ -39,15 +39,15 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
             gitArgs += " " + Tag_Start + ".." + Tag_End;
 
             //## executing the command
-            List<string> giTagEndutput = ClientGit.Instance.ExecCommand(gitArgs);
+            List<string> gitOutput = ClientGit.Instance.ExecCommand(gitArgs);
 
             // aux regex
             Regex regexFooter = new Regex("([Rr][Ee][Ss][Oo][Ll][Vv]([Ee]([Ss])?|[Ii][Nn][Gg])|[Cc][Ll][Oo][Ss]([Ee]([Ss]|[Dd])?|[Ii][Nn][Gg])|[Rr][Ee][Oo][Pp][Ee][Nn]([Ss]|[Ii][Nn][Gg])?|[Hh][Oo][Ll][Dd]([Ss]|[Ii][Nn][Gg])?|[Ii][Nn][Vv][Aa][Ll][Ii][Dd][Aa][Tt]([Ee]([Ss]|[Dd])?|[Ii][Nn][Gg])|[Aa][Dd][Dd][Rr][Ee][Ss][Ss][Ee][Ss]|[Ss][Ee][Ee]|[Rr][Ee]([Ff]([Ss])?([Ee][Rr][Ee][Nn][Cc][Ee][Ss])?)?)\\s+(((,|\\s+[Aa][Nn][Dd]) )?#\\d+)+");
-            Regex regexLogHeader = new Regex("^(feat|fix|docs|style|refacTagEndr|test|chore)\\s*(\\(.+\\))?:");
+            Regex regexLogHeader = new Regex("^(\\\\)?(feat|fix|docs|style|refactor|test|chore)\\s*(\\(.+\\))?:");
 
             // processing the output TagEnd extract the informations
             LinkedList<string> gitRawLog = new LinkedList<string>();
-            foreach (string line in giTagEndutput)
+            foreach (string line in gitOutput)
             {
                 if (line != null)
                 {
