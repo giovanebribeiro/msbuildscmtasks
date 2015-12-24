@@ -29,10 +29,10 @@ namespace MSBuild.SCM.Tasks.Changelog
         {
             ChangelogBuilder clb = new ChangelogBuilder
             {
-                _AssemblyInfoPath = AssemblyInfoPath,
-                _ChangelogFilePath = ChangelogFilePath,
-                _TagEnd = TagEnd,
-                _TagStart = TagStart
+                Assembly_Info_Path = AssemblyInfoPath,
+                Changelog_FilePath = ChangelogFilePath,
+                Tag_End = TagEnd,
+                Tag_Start = TagStart
             };
             return clb.Build();
         }

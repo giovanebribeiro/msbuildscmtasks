@@ -149,10 +149,10 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
         {
             ChangelogBuilder clb = new ChangelogBuilder
             {
-                _AssemblyInfoPath = dummyAssemblyInfo,
-                _ChangelogFilePath = dummyChangelog,
-                _TagEnd = null,
-                _TagStart = null
+                Assembly_Info_Path = dummyAssemblyInfo,
+                Changelog_FilePath = dummyChangelog,
+                Tag_End = null,
+                Tag_Start = null
             };
             bool result = clb.Build();
             Assert.IsTrue(result, "changelog build execution failed");
@@ -166,7 +166,7 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
             File.Delete(dummyAssemblyInfo);
             using (var writer = new StreamWriter(dummyAssemblyInfo))
             {
-                writer.WriteLine("[assembly: AssemblyVersion(\"2.0.0\")]");
+                writer.WriteLine("[assembly: AssemblyVersion(\"2.0.0.0\")]");
                 writer.Close();
             }
 

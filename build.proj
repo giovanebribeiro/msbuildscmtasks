@@ -62,7 +62,7 @@
 	<Target Name="All">	
 		<Message Text=""/>
 		<Message Text="MSBuildSCMTasks build process"/>
-		<Message Text="Usage: msbuild .\build.proj [/p:Configuration='Debug|Release'] [/p:Bump='major|minor|patch'] /t:'task_name'"/>
+		<Message Text="Usage: msbuild .\build.proj [/p:Configuration='Debug|Release'] [/p:Bump='major|minor|patch|build'] /t:'task_name'"/>
 		<Message Text="-----------------------------------------------------------------------------"/>
 		<Message Text="|  Task Name        |    Description                                        |"/>
 		<Message Text="|-------------------|-------------------------------------------------------|"/>

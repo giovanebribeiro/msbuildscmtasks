@@ -11,72 +11,72 @@ namespace MSBuild.SCM.Tasks
     public class DummyBuildEngine:IBuildEngine
     {
         #region logs
-        private StringBuilder _errorLog = new StringBuilder();
+        private StringBuilder error_log = new StringBuilder();
         public string ErrorLog
         {
-            get { return _errorLog.ToString(); }
+            get { return error_log.ToString(); }
         }
 
-        private StringBuilder _messageLog = new StringBuilder();
+        private StringBuilder message_log = new StringBuilder();
         public string MessageLog
         {
-            get { return _messageLog.ToString(); }
+            get { return message_log.ToString(); }
         }
 
-        private StringBuilder _warningLog = new StringBuilder();
+        private StringBuilder warning_log = new StringBuilder();
         public string WarningLog
         {
-            get { return _warningLog.ToString(); }
+            get { return warning_log.ToString(); }
         }
 
-        public StringBuilder _customLog = new StringBuilder();
+        public StringBuilder custom_log = new StringBuilder();
         public string CustomLog
         {
             get
             {
-                return _customLog.ToString();
+                return custom_log.ToString();
             }
         }
 
         #endregion
 
         #region counters
-        private int _errorCount;
+        private int error_count;
         public int ErrorCount
         {
-            get { return _errorCount; }
+            get { return error_count; }
         }
 
-        private int _messageCount;
+        private int message_count;
         public int MessageCount
         {
-            get { return _messageCount; }
+            get { return message_count; }
         }
 
-        private int _warningCount;
+        private int warning_count;
         public int WarningCount
         {
-            get { return _warningCount; }
+            get { return warning_count; }
         }
 
-        private int _customCount;
+        private int custom_count;
         public int CustomCount
         {
-            get { return _customCount; }
+            get { return custom_count; }
         }
 
         public int LogCount
         {
-            get { return _errorCount + _messageCount + _warningCount; }
+            get { return error_count + message_count + warning_count; }
         }
         #endregion
 
         public DummyBuildEngine()
         {
-            _errorCount = 0;
-            _messageCount = 0;
-            _warningCount = 0;
-            _customCount = 0;
+            error_count = 0;
+            message_count = 0;
+            warning_count = 0;
+            custom_count = 0;
         }
 
         #region IBuildEngineMembers
@@ -109,29 +109,29 @@ namespace MSBuild.SCM.Tasks
         #region members
         public void LogErrorEvent(BuildErrorEventArgs e)
         {
-            _errorCount++;
-            _errorLog.AppendLine(e.Message);
+            error_count++;
+            error_log.AppendLine(e.Message);
             Console.WriteLine("Error: {0}", e.Message);
         }
 
         public void LogWarningEvent(BuildWarningEventArgs e)
         {
-            _warningCount++;
-            _warningLog.AppendLine(e.Message);
+            warning_count++;
+            warning_log.AppendLine(e.Message);
             Console.WriteLine("Warning: {0}", e.Message);
         }
 
         public void LogMessageEvent(BuildMessageEventArgs e)
         {
-            _messageCount++;
-            _messageLog.AppendLine(e.Message);
+            message_count++;
+            message_log.AppendLine(e.Message);
             Console.WriteLine("Message: {0}", e.Message);
         }
 
         public void LogCustomEvent(CustomBuildEventArgs e)
         {
-            _customCount++;
-            _customLog.AppendLine(e.Message);
+            custom_count++;
+            custom_log.AppendLine(e.Message);
             Console.WriteLine("Custom: {0}", e.Message);
         }
 

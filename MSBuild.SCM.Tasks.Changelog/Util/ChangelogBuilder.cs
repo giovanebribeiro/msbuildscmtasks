@@ -11,10 +11,10 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
 {
     public class ChangelogBuilder
     {
-        public string _AssemblyInfoPath { get; set; }
-        public string _TagStart { get; set; }
-        public string _TagEnd { get; set; }
-        public string _ChangelogFilePath { get; set; }
+        public string Assembly_Info_Path { get; set; }
+        public string Tag_Start { get; set; }
+        public string Tag_End { get; set; }
+        public string Changelog_FilePath { get; set; }
 
         private LinkedList<ChangelogLine> MountChangelogLines()
         {
@@ -26,17 +26,17 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
 
             //mounting the args
             string gitArgs = "log --format=\"%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci%n------------------------ >8 ------------------------\"";
-            if (_TagStart == null)
+            if (Tag_Start == null)
             {
-                _TagStart = mostRecentTag;
+                Tag_Start = mostRecentTag;
             }
 
-            if (_TagEnd == null)
+            if (Tag_End == null)
             {
-                _TagEnd = "HEAD";
+                Tag_End = "HEAD";
             }
 
-            gitArgs += " " + _TagStart + ".." + _TagEnd;
+            gitArgs += " " + Tag_Start + ".." + Tag_End;
 
             //## executing the command
             List<string> giTagEndutput = ClientGit.Instance.ExecCommand(gitArgs);
@@ -228,21 +228,21 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
 
         private void FileRecord(StringBuilder newContent)
         {
-            if (_ChangelogFilePath == null)
+            if (Changelog_FilePath == null)
             {
-                _ChangelogFilePath = ".\\CHANGELOG.md";
+                Changelog_FilePath = ".\\CHANGELOG.md";
             }
 
-            string tempFilename = _ChangelogFilePath + ".temp";
+            string tempFilename = Changelog_FilePath + ".temp";
             using (var writer = new StreamWriter(tempFilename))
             {
                 // write the new content
                 writer.WriteLine(newContent.ToString());
 
                 //write the previous content, if file exists
-                if (File.Exists(_ChangelogFilePath))
+                if (File.Exists(Changelog_FilePath))
                 {
-                    using (var reader = new StreamReader(_ChangelogFilePath))
+                    using (var reader = new StreamReader(Changelog_FilePath))
                     {
                         while (!reader.EndOfStream)
                         {
@@ -253,13 +253,13 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
             }
 
             // copy the temp file TagEnd original
-            File.Copy(tempFilename, _ChangelogFilePath, true);
+            File.Copy(tempFilename, Changelog_FilePath, true);
             File.Delete(tempFilename);
         }
 
         public bool Build()
         {
-            string versionNumber = TasksHelper.GetProductVersion(_AssemblyInfoPath);
+            string versionNumber = TasksHelper.GetProductVersion(Assembly_Info_Path);
             LinkedList<ChangelogLine> changelogLines = MountChangelogLines();
 
             StringBuilder newFileContent = new StringBuilder();

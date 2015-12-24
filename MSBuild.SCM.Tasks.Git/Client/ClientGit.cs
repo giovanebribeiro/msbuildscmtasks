@@ -47,7 +47,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
 
 
                 //found git path in registry.
-                bool gitIsInRegistry = true;
+                //bool gitIsInRegistry = true;
                 string registryKeyString = @"SOFTWARE";
                 Microsoft.Win32.RegistryKey registryKeyLocalMachine = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(registryKeyString);
                 Microsoft.Win32.RegistryKey registryKeyCurrentUser = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);

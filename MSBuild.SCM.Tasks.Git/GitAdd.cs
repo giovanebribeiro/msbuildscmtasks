@@ -15,33 +15,33 @@ namespace MSBuild.SCM.Tasks.Git
 
         public override bool Execute()
         {
-            if (All == null && FileList == null)
+            if (!All && FileList == null)
             {
                 Log.LogError("At least one of parameters must be set.");
                 return false;
             }
 
-            if(All == null)
+            if(!All)
             {
                 All = false;
             }
 
-            string[] _fileList = null;
+            string[] fileList = null;
             if (FileList == null)
             {
-                _fileList = new string[] { };
+                fileList = new string[] { };
             }
             else
             {
-                _fileList = new string[FileList.Length];
+                fileList = new string[FileList.Length];
                 int i = 0;
                 foreach (ITaskItem file in FileList)
                 {
-                    _fileList[i] = file.ItemSpec;
+                    fileList[i] = file.ItemSpec;
                 }
             }
 
-            List<string> output = Add.ExecCommand(All, _fileList);
+            List<string> output = Add.ExecCommand(All, fileList);
 
             return true;
         }
