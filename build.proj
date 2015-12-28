@@ -71,7 +71,8 @@
     <Exec Command="notepad.exe .\CHANGELOG.md"/>
 
     <!-- 4 - Commit changes -->
-    
+    <GitAdd All="true"/>
+    <GitCommit Message="Updating CHANGELOG.md and GeneralAssemblyInfo.cs"/>
     
 	</Target>
   
