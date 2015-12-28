@@ -113,7 +113,6 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 Arguments = args,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true,
                 CreateNoWindow = true
             };
 
@@ -129,16 +128,8 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 bool started = gitProcess.Start();
 
                 gitProcess.BeginOutputReadLine();
-                gitProcess.BeginErrorReadLine();
                 gitProcess.WaitForExit();
-
-                if(Stderr.Count > 0)
-                {
-                    for(int i=0;i<Stderr.Count; i++)
-                    {
-                        Console.WriteLine("Process error: " + Stderr[i]);
-                    }
-                }
+                gitProcess.Close();
 
                 return Stdout;
             };
