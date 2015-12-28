@@ -47,8 +47,6 @@
 			<MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"$(TestResultsFile)"</MSTestCommand>
 		</PropertyGroup>
 		
-		<!--Message Text=">>>>>>>>>>>>>>>>>>>>>> MsTestCommand: $(MSTestCommand)"/-->
-		
 		<Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
 	</Target>
 
@@ -62,22 +60,23 @@
     
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <!-- 1 - Bump version -->
-    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+    <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
     
     <!-- 2 - Update Changelog The default path is ".\CHANGELOG.md" -->
-    <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+    <!--Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
 
     <!-- 3 - Check if changelog file is correct -->
-    <Exec Command="notepad.exe .\CHANGELOG.md"/>
+    <!--Exec Command="notepad.exe .\CHANGELOG.md"/-->
 
     <!-- 4 - Commit changes -->
     <GitAdd All="true"/>
-    <GitCommit Message="Updating CHANGELOG.md and GeneralAssemblyInfo.cs"/>
+    <GitCommit/>
 
     <!-- 5 - Create tag -->
-    <GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+    <!--GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
 
-    <!-- 6 - Push changes -->
+    <!-- 6 - Push changes and tag-->
+    <GitPush/>
     <GitPush Tags="true"/>
     
 	</Target>

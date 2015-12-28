@@ -18,6 +18,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
     {
         private static ClientGit instance;
         private static List<string> Stdout;
+        private static List<string> Stderr;
         private string GitPath { get; set; }
 
         #region singleton implementation
@@ -80,35 +81,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
 
                     
                 //if git path not found in registry, throw an exception
-                throw new InvalidOperationException("The git path wasn't informed and not present in registry or ProgramFiles folder. Please install git or inform the correct git path using the 'GitPath' attribute in task.");
-                
-
-                /*
-                // Option 2: In Program Files
-
-                bool gitIsInProgramFiles = true;
-                if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "Git"))
-                {
-                    gitIsInProgramFiles = false;
-                }
-
-                // Option 3: In ProgramFilesx86
-                bool gitIsInProgramFilesx86 = true;
-                if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "Git"))
-                {
-                    gitIsInProgramFilesx86 = false;
-                }
-
-                
-                if (gitIsInProgramFiles)
-                {
-                    GitPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "Git" + complement;
-                }
-                else if (gitIsInProgramFilesx86)
-                {
-                    GitPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "Git" + complement;
-                }
-                */
+                throw new InvalidOperationException("The git path wasn't informed and not present in registry or ProgramFiles folder. Please install git or inform the correct git path using the 'GitPath' attribute in task.");                
             }
         }
 
@@ -118,6 +91,11 @@ namespace MSBuild.SCM.Tasks.Git.Client
             Stdout.Add(e.Data);
         }
 
+        static void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Stderr.Add(e.Data);
+        }
+
         /// <summary>
         /// Execute a general git command
         /// </summary>
@@ -125,30 +103,42 @@ namespace MSBuild.SCM.Tasks.Git.Client
         /// <returns>A list of strings with the command output</returns>
         public List<string> ExecCommand(string args)
         {
-#if DEBUG 
+
             Console.WriteLine("gitPath = "+GitPath);
             Console.WriteLine("args = " + args);
-#endif
+
             ProcessStartInfo psinfo = new ProcessStartInfo
             {
                 FileName = GitPath,
                 Arguments = args,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
 
             Stdout = new List<string>();// clear the buffer.
+            Stderr = new List<string>();
 
             using (Process gitProcess = new Process())
             {
                 gitProcess.StartInfo = psinfo;
                 gitProcess.OutputDataReceived += new DataReceivedEventHandler(p_OutputDataReceived);
+                gitProcess.ErrorDataReceived += new DataReceivedEventHandler(p_ErrorDataReceived);
 
                 bool started = gitProcess.Start();
 
                 gitProcess.BeginOutputReadLine();
+                gitProcess.BeginErrorReadLine();
                 gitProcess.WaitForExit();
+
+                if(Stderr.Count > 0)
+                {
+                    for(int i=0;i<Stderr.Count; i++)
+                    {
+                        Console.WriteLine("Process error: " + Stderr[i]);
+                    }
+                }
 
                 return Stdout;
             };
