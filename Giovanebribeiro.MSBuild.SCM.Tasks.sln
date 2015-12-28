@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB40545A-4CB1-4A64-9E3A-9CFC554B6BF8}"
 	ProjectSection(SolutionItems) = preProject
 		build.proj = build.proj
+		MSBuild.SCM.Tasks.nuspec = MSBuild.SCM.Tasks.nuspec
 		MSBuild.SCM.Tasks.Targets = MSBuild.SCM.Tasks.Targets
 	EndProjectSection
 EndProject
@@ -22,6 +23,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks.Changelog", "MSBuild.SCM.Tasks.Changelog\MSBuild.SCM.Tasks.Changelog.csproj", "{F00AF864-5BAE-4AFC-A49E-17406A2113BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSBuild.SCM.Tasks.Changelog.Test", "MSBuild.SCM.Tasks.Changelog.Test\MSBuild.SCM.Tasks.Changelog.Test.csproj", "{93AC027A-0D90-4C6E-8AB2-A0EF415EE7EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{BE865D2B-6C07-4F8C-BDDF-349EC0EA0C6C}"
+	ProjectSection(SolutionItems) = preProject
+		Build.proj = Build.proj
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

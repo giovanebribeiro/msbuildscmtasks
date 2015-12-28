@@ -7,8 +7,8 @@
     <ProjectGuid>{29B2A64F-312B-4D4A-A041-A2D387EB03D4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MSBuild.SCM.Tasks</RootNamespace>
-    <AssemblyName>MSBuild.SCM.Tasks</AssemblyName>
+    <RootNamespace>MSBuild.SCM.Tasks.Util</RootNamespace>
+    <AssemblyName>MSBuild.SCM.Tasks.Util</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

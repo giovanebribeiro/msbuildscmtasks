@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BumpVersion.targets" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MSBuild.SCM.Tasks.Util\MSBuild.SCM.Tasks.Util.csproj">

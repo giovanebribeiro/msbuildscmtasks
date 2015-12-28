@@ -88,7 +88,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
         #region Start process to exec command
         static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Console.WriteLine(e.Data);
+            //Console.WriteLine(e.Data);
             Stdout.Add(e.Data);
         }        
 

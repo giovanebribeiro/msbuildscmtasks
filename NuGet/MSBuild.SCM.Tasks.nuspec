@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MSBuildSCMTasks</id>
+    <version>0.0.1.0</version>
+    <title>MSBuild.SCM.Tasks</title>
+    <authors>Giovane Boaviagem Ribeiro</authors>
+    <owners>NA</owners>
+    <projectUrl>https://github.com/giovanebribeiro/msbuildscmtasks</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A set of MSBuild tasks to increase productivity for Software Configuration Managers.</description>
+    <copyright>MIT License</copyright>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="..\MSBuild.SCM.Tasks.BumpVersion\bin\Release\MSBuild.SCM.Tasks.BumpVersion.dll" target="lib\MSBuild.SCM.Tasks.BumpVersion.dll" />
+    <file src="..\MSBuild.SCM.Tasks.Changelog\bin\Release\MSBuild.SCM.Tasks.Changelog.dll" target="lib\MSBuild.SCM.Tasks.Changelog.dll" />
+    <file src="..\MSBuild.SCM.Tasks.Git\bin\Release\MSBuild.SCM.Tasks.Git.dll" target="lib\MSBuild.SCM.Tasks.Git.dll" />
+  </files>
+</package>

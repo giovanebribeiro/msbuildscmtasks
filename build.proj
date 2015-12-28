@@ -5,24 +5,26 @@
 	>
 
   <PropertyGroup>
-		<SolutionFile>./Giovanebribeiro.MSBuild.SCM.Tasks.sln</SolutionFile>	
+    <ProjectName>MSBuild.SCM.Tasks</ProjectName>
+    <AssemblyName>MSBuildSCMTasks</AssemblyName>
+		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestPath>
 		<OutputPath>$(MSBuildProjectDirectory)\Output</OutputPath>
 		<DoubleQuotes>"</DoubleQuotes>
 		<TestResultsFile>TestResults\Results.trx</TestResultsFile>
     <Bump Condition="'$(Bump)' == ''">patch</Bump>
+    <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
+    <NuGetPath>$(MSBuildProjectDirectory)\NuGet</NuGetPath>
 	</PropertyGroup>
 
-  <!--Project tasks to be used-->
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.dll" TaskName="BumpVersion"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAdd"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAddTag"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitCommit"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitPush"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Git\bin\$(Configuration)\MSBuild.SCM.Tasks.Git.dll" TaskName="GitStatus"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\MSBuild.SCM.Tasks.Changelog\bin\$(Configuration)\MSBuild.SCM.Tasks.Changelog.dll" TaskName="Changelog"/>
+  <!-- import the community tasks -->
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets"/>
 
+  <!-- import this project -->
+  <Import Project="MSBuild.SCM.Tasks.Targets"/>
+
+  <!--Project tasks to be used-->
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog\Changelog.Targets"/>
@@ -59,29 +61,55 @@
   </Target>
     
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
-    <!-- 1 - Bump version -->
+    <Message Text="* Bump version"/>
     <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
     
-    <!-- 2 - Update Changelog The default path is ".\CHANGELOG.md" -->
+    <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
+    <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
+      <Output TaskParameter="Assemblies" ItemName="YourAssemblyInfo"/>
+    </GetAssemblyIdentity>
+    <xmlUpdate
+      Prefix="nu"
+      Namespace="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd"
+      XmlFileName="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
+      XPath="/nu:package/nu:metadata/nu:version/."
+      Value="%(YourAssemblyInfo.Version)"
+      />
+    
+    <Message Text="* Generate the NuGet Package"/>
+    <NuGetPack 
+      ToolPath="$(NuGetPath)"
+      File="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
+      OutputDirectory="$(OutputPath)"
+      Version="%(YourAssemblyInfo.Version)"
+      Symbols="true"
+      />
+
+    <Message Text="* Publishing the package"/>
+    <!-- You must run nuget setApiKey {put-your-api-key-here} -Source http://My_Nuget_Gallery_Service_Url/" must be run prior on the machine to ensure the api key is set correctly.-->
+    <Exec 
+      WorkingDirectory="$(OutputPath)" 
+      Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; -Source https://www.nuget.org/" 
+      />
+    
+
+    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
     <!--Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
 
-    <!-- 3 - Check if changelog file is correct -->
+    <Message Text="* Check if changelog file is correct"/>
     <!--Exec Command="notepad.exe .\CHANGELOG.md"/-->
 
-    <!-- 4 - Commit changes -->
-    <GitAdd All="true"/>
-    <GitCommit/>
+    <Message Text="* Commit changes"/>
+    <!--GitAdd All="true"/>
+    <GitCommit/-->
 
-    <!-- 5 - Create tag -->
+    <Message Text="* Create tag"/>
     <!--GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
-
-    <!-- 6 - Push changes and tag-->
-    <GitPush/>
-    <GitPush Tags="true"/>
-    
 	</Target>
-  
-  <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'"/>
+
+  <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+    <Message Text="Build process finished. Please push the changes to remote repo using 'git push origin master --tags'."/>
+  </Target>
 	
 	<Target Name="All">	
 		<Message Text=""/>
