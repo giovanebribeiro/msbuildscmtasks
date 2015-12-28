@@ -10,7 +10,6 @@ namespace MSBuild.SCM.Tasks.Git
 {
     public class GitAddTag : Microsoft.Build.Utilities.Task
     {
-        [Required]
         public string Version { get; set; }
         public string TagPattern { get; set; }
         public string TagMessage { get; set; }
