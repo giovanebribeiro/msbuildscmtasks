@@ -63,12 +63,16 @@
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <!-- 1 - Bump version -->
     <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    
     <!-- 2 - Update Changelog The default path is ".\CHANGELOG.md" -->
     <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
-    
-    <Message Text="Before command"/>
+
+    <!-- 3 - Check if changelog file is correct -->
     <Exec Command="notepad.exe .\CHANGELOG.md"/>
-    <Message Text="After command"/>
+
+    <!-- 4 - Commit changes -->
+    
+    
 	</Target>
   
   <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'"/>

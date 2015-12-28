@@ -211,6 +211,9 @@ namespace MSBuild.SCM.Tasks.Git.Client
             Match match = pattern.Match(mostRecentTag);
             mostRecentTag = match.Groups[0].Value.ToString();
 
+            //Console.WriteLine("Teste!!!!>>>>>");
+            //Console.WriteLine("mostRecentTag = " + mostRecentTag);
+
             return mostRecentTag;
         }
     }

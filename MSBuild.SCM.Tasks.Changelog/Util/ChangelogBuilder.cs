@@ -36,7 +36,10 @@ namespace MSBuild.SCM.Tasks.Changelog.Util
                 Tag_End = "HEAD";
             }
 
-            gitArgs += " " + Tag_Start + ".." + Tag_End;
+            if (!Tag_Start.Equals(""))
+            {
+                gitArgs += " " + Tag_Start + ".." + Tag_End;
+            }            
 
             //## executing the command
             List<string> gitOutput = ClientGit.Instance.ExecCommand(gitArgs);
