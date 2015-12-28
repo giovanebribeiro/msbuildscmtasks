@@ -88,13 +88,9 @@ namespace MSBuild.SCM.Tasks.Git.Client
         #region Start process to exec command
         static void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
+            Console.WriteLine(e.Data);
             Stdout.Add(e.Data);
-        }
-
-        static void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            Stderr.Add(e.Data);
-        }
+        }        
 
         /// <summary>
         /// Execute a general git command
@@ -123,7 +119,6 @@ namespace MSBuild.SCM.Tasks.Git.Client
             {
                 gitProcess.StartInfo = psinfo;
                 gitProcess.OutputDataReceived += new DataReceivedEventHandler(p_OutputDataReceived);
-                gitProcess.ErrorDataReceived += new DataReceivedEventHandler(p_ErrorDataReceived);
 
                 bool started = gitProcess.Start();
 
