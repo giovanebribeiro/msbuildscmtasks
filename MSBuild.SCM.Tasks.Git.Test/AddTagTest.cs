@@ -42,7 +42,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             output = Commit.ExecCommand(true, "init commit", null);
 
             // create tag:
-            output = AddTag.ExecCommand(null, "0.0.0", null);
+            output = AddTag.ExecCommand(null, "0.0.0", null, null);
             //check results
             output = ClientGit.Instance.ExecCommand("tag");
             Assert.AreEqual("v0.0.0", output.Single(s => (s != null && s.Contains("v0.0.0"))));
@@ -62,7 +62,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             output = Commit.ExecCommand(true, "init commit", null);
 
             //create tag
-            output = AddTag.ExecCommand("r%VERSION%", "0.0.1", null);
+            output = AddTag.ExecCommand("r%VERSION%", "0.0.1", null, null);
             output = ClientGit.Instance.ExecCommand("tag");
             Assert.AreEqual("r0.0.1", output.Single(s=>(s!=null && s.Contains("r0.0.1"))));
         }
@@ -81,10 +81,38 @@ namespace MSBuild.SCM.Tasks.Git.Test
             output = Commit.ExecCommand(true, "init commit", null);
 
             // create tag
-            output = AddTag.ExecCommand(null, "0.0.2", "New Release with version %VERSION%");
+            output = AddTag.ExecCommand(null, "0.0.2", "New Release with version %VERSION%", null);
             output = ClientGit.Instance.ExecCommand("tag -n1");
             string line = output.Single(s => (s!=null && s.Contains("New Release with version 0.0.2")));
             Assert.IsTrue(line != null);
+        }
+
+        [TestMethod]
+        public void TagWithVersionFromAssemblyInfo()
+        {
+            string assemblyInfoPath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\AssemblyTest.txt";
+
+            using (var writer = new StreamWriter(assemblyInfoPath))
+            {
+                writer.WriteLine("[assembly: AssemblyVersion(\"0.1.0.0\")]");
+            }
+
+            // create a file and commit it:
+            string contentFile3 = dummyRepo + "\\testFile3.txt";
+            using (var writer = new StreamWriter(contentFile3))
+            {
+                writer.WriteLine("File content for file 3");
+                writer.Close();
+            }
+            List<string> output = Add.ExecCommand(false, new string[] { contentFile3 });
+            output = Commit.ExecCommand(true, "init commit", null);
+
+            // create tag
+            output = AddTag.ExecCommand(null, null, null, assemblyInfoPath);
+            output = ClientGit.Instance.ExecCommand("tag -n1");
+            string line = output.Single(s => (s != null && s.Contains("Release version 0.1.0.0")));
+            Assert.IsTrue(line != null);
+
         }
 
         [TestMethod]

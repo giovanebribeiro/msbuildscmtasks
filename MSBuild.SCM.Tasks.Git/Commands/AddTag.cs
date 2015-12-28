@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,11 +10,29 @@ namespace MSBuild.SCM.Tasks.Git.Client
 {
     public class AddTag
     {
-        public static List<string> ExecCommand(string tagPattern, string version, string tagMessage)
-        {   
+        public static List<string> ExecCommand(string tagPattern, string version, string tagMessage, string AssemblyInfoPath)
+        {
             if (version == null)
             {
-                throw new InvalidOperationException("Version can't be null");
+                if (AssemblyInfoPath == null)
+                {
+                    throw new InvalidOperationException("If version is null, the AssemblyInfoPath must be set.");
+                }
+
+                using (var reader = new StreamReader(AssemblyInfoPath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("[assembly: AssemblyVersion"))
+                        {
+                            version = TasksHelper.GetVersionNumber(line);
+                            break;
+                        }
+                    }
+
+                    reader.Close();
+                }
             }
 
             if (tagPattern == null)

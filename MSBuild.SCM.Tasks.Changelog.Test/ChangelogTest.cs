@@ -94,7 +94,7 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
             #endregion
 
             #region create tag for initial commit
-            output = AddTag.ExecCommand(null, "0.0.0", null);
+            output = AddTag.ExecCommand(null, "0.0.0", null, null);
             output = ClientGit.Instance.ExecCommand("tag -l");
             #endregion
 

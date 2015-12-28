@@ -63,7 +63,12 @@
   <ItemGroup>
     <None Include="Git.targets" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MSBuild.SCM.Tasks.Util\MSBuild.SCM.Tasks.Util.csproj">
+      <Project>{29b2a64f-312b-4d4a-a041-a2d387eb03d4}</Project>
+      <Name>MSBuild.SCM.Tasks.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

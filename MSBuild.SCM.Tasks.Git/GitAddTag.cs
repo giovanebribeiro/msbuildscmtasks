@@ -14,9 +14,11 @@ namespace MSBuild.SCM.Tasks.Git
         public string Version { get; set; }
         public string TagPattern { get; set; }
         public string TagMessage { get; set; }
+        public string AssemblyInfoPath { get; set; }
+
         public override bool Execute()
         {
-            List<string> output = AddTag.ExecCommand(TagPattern, Version, TagMessage);
+            List<string> output = AddTag.ExecCommand(TagPattern, Version, TagMessage, AssemblyInfoPath);
 
             foreach(string line in output)
             {

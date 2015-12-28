@@ -12,6 +12,16 @@ namespace MSBuild.SCM.Tasks
 {
     public class TasksHelper
     {
+        /// <summary>
+        /// Extract the version number from line present in "AssemblyInfo.cs" file.
+        /// </summary>
+        /// <param name="assemblyInfoLine">Line which contains the version. The line must be the format: [assembly: AssemblyVersion("X.X.X.X")]</param>
+        /// <returns>The number version</returns>
+        public static string GetVersionNumber(string assemblyInfoLine)
+        {
+            return assemblyInfoLine.Substring(assemblyInfoLine.IndexOf('(') + 2, assemblyInfoLine.LastIndexOf(')') - assemblyInfoLine.IndexOf('(') - 3);
+        }
+
         protected static bool IsFileLocked(FileInfo file)
         {
             FileStream stream = null;

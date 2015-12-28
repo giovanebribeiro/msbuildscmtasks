@@ -73,6 +73,9 @@
     <!-- 4 - Commit changes -->
     <GitAdd All="true"/>
     <GitCommit Message="Updating CHANGELOG.md and GeneralAssemblyInfo.cs"/>
+
+    <!-- 5 - Create tag -->
+    <GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
     
 	</Target>
   
