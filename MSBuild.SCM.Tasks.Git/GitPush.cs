@@ -11,10 +11,11 @@ namespace MSBuild.SCM.Tasks.Git
     {
         public string RemoteName { get; set; }
         public string BranchName { get; set; }
+        public bool Tags { get; set; }
 
         public override bool Execute()
         {
-            List<string> output = Push.ExecCommand(RemoteName, BranchName);
+            List<string> output = Push.ExecCommand(RemoteName, BranchName, Tags);
             foreach(string line in output)
             {
                 if (line != null)

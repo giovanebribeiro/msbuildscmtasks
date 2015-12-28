@@ -8,7 +8,7 @@ namespace MSBuild.SCM.Tasks.Git.Client
 {
     public class Push
     {
-        public static List<string> ExecCommand(string branchOrigin, string branch)
+        public static List<string> ExecCommand(string branchOrigin, string branch, bool pushTags)
         {
             string command = "push ";
             if (branchOrigin == null)
@@ -21,7 +21,13 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 branch = "master";
             }
 
-            command += branchOrigin + " " + branch; 
+            command += branchOrigin + " " + branch;
+
+            if (pushTags)
+            {
+                command += " --tags";
+            }            
+
             return ClientGit.Instance.ExecCommand(command);
         }
     }

@@ -62,7 +62,7 @@
     
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <!-- 1 - Bump version -->
-    <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
     
     <!-- 2 - Update Changelog The default path is ".\CHANGELOG.md" -->
     <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
@@ -76,6 +76,9 @@
 
     <!-- 5 - Create tag -->
     <GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+
+    <!-- 6 - Push changes -->
+    <GitPush Tags="true"/>
     
 	</Target>
   

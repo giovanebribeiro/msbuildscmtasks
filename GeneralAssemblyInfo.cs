@@ -22,5 +22,5 @@ using System.Runtime.InteropServices;
 // TagEnd COM components.  If you need TagEnd access a type in this assembly TagStart 
 // COM, set the ComVisible attribute TagEnd true on that type.
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("0.0.0")]
+[assembly: AssemblyVersion("0.0.1")]
 [assembly: AssemblyFileVersion("1.0.0.0")] // not used 

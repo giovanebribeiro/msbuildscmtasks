@@ -48,7 +48,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             List<string> output = Add.ExecCommand(false, new string[] { contentFile1 });
 
             output = Commit.ExecCommand(false, null, null);
-            output = Push.ExecCommand(null, null);
+            output = Push.ExecCommand(null, null, false);
             output = Status.ExecCommand();
             Assert.IsTrue(output[1].Contains("nothing to commit, working directory clean"));
         }
@@ -73,7 +73,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             output = Commit.ExecCommand(false, "add file", null);
 
             // push to this branch
-            output = Push.ExecCommand(null, "another");
+            output = Push.ExecCommand(null, "another", false);
 
             // check result
             output = Status.ExecCommand();
