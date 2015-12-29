@@ -4,13 +4,16 @@
 	ToolsVersion="4.0"
 	>
 
+  <ItemGroup>
+    <OutputPath Include="$(MSBuildProjectDirectory)\tasks"/>
+  </ItemGroup>
+
   <PropertyGroup>
     <ProjectName>MSBuild.SCM.Tasks</ProjectName>
     <AssemblyName>MSBuildSCMTasks</AssemblyName>
 		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
-		<OutputPath>$(MSBuildProjectDirectory)\Output</OutputPath>
 		<DoubleQuotes>"</DoubleQuotes>
 		<TestResultsFile>TestResults\Results.trx</TestResultsFile>
     <Bump Condition="'$(Bump)' == ''">patch</Bump>
@@ -33,7 +36,8 @@
 		<Message Text="Clean Projects"/>
 		<MSBuild Projects="$(SolutionFile)" Targets="Clean"/>
 		<Delete Files="$(TestResultsFile)"/>
-    <RemoveDir Directories="$(OutputPath)"/>
+    <RemoveDir Directories="@(OutputPath)"/>
+    <MakeDir Directories="@(OutputPath)"/>
 	</Target>
 	
 	<Target Name="Compile" DependsOnTargets="Clean">
@@ -57,6 +61,9 @@
       Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)" 
       Condition="'$(NugetApiKeyFile)' == ''"
       />
+    <Message Text ="Copy the app DLLs to output folder..."/>
+    <Message Text="@(OutputPath->'%(FullPath)')"/>
+    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="@(OutputPath->'%(FullPath)')"/>
 
     <Message Text="* Bump version"/>
     <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
@@ -69,12 +76,6 @@
   </Target>
 
   <Target Name="Pack" DependsOnTargets="PrepareToPublish" Condition="'$(Configuration)' == 'Release'">
-    <!--Message Text="Create the Output folder..."/>
-    <MakeDir Directories="$(OutputPath)"/>
-    
-    <Message Text ="Copy the app DLLs to output folder..."/>
-    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="$(OutputPath)"/-->
-
     <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
     <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
       <Output TaskParameter="Assemblies" ItemName="YourAssemblyInfo"/>
@@ -91,7 +92,7 @@
     <NuGetPack
       ToolPath="$(NuGetPath)"
       File="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
-      OutputDirectory="$(OutputPath)"
+      OutputDirectory="@(OutputPath)"
       Version="%(YourAssemblyInfo.Version)"
       Symbols="true"
       />
@@ -105,7 +106,7 @@
     <Message Text="nuget API KEY: @(NugetApiKey)"/-->
     
     <Exec 
-      WorkingDirectory="$(OutputPath)" 
+      WorkingDirectory="@(OutputPath)" 
       Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; @(NugetApiKey)" 
       />
     
