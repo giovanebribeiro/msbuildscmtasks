@@ -12,5 +12,4 @@ For more details check our wiki!
 | GitAdd        | Add files to a git repository                                                 |
 | GitAddTag     | Add a tag to git repository                                                   |
 | GitCommit     | Commit changes in git repository                                              |
-| GitPush       | Send changes to remote git repository                                         |
 | GitStatus     | Show git repository status                                                    |

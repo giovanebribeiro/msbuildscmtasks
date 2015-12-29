@@ -122,8 +122,8 @@
   <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'">
     <Message Text="Build process finished. Please push the changes to remote repo using 'git push origin master --tags'."/>
   </Target>
-	
-	<Target Name="All">	
+  
+  <Target Name="All">	
 		<Message Text=""/>
 		<Message Text="MSBuildSCMTasks build process"/>
 		<Message Text="Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
