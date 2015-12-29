@@ -50,9 +50,22 @@ namespace MSBuild.SCM.Tasks.Git.Client
                 //found git path in registry.
                 //bool gitIsInRegistry = true;
                 string registryKeyString = @"SOFTWARE";
-                Microsoft.Win32.RegistryKey registryKeyLocalMachine = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(registryKeyString);
-                Microsoft.Win32.RegistryKey registryKeyCurrentUser = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyString);
-
+                RegistryKey registryKeyLocalMachine = null;
+                RegistryKey registryKeyCurrentUser = null;
+                //RegistryKey registryKeyLocalMachine = Registry.LocalMachine.OpenSubKey(registryKeyString);
+                //RegistryKey registryKeyCurrentUser = Registry.CurrentUser.OpenSubKey(registryKeyString);
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    registryKeyLocalMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(registryKeyString);
+                    registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64).OpenSubKey(registryKeyString);
+                }
+                else
+                {
+                    registryKeyLocalMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey(registryKeyString);
+                    registryKeyCurrentUser = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry32).OpenSubKey(registryKeyString);
+                }
+                 
+                
                 RegistryKey subKey = null;
 
                 //option1: Git-Cheetah
@@ -77,9 +90,33 @@ namespace MSBuild.SCM.Tasks.Git.Client
                     object value = subKey.GetValue("MSysGit");
                     GitPath = value.ToString() + "\\git.exe";
                     return;
-                } 
+                }
 
-                    
+                subKey = registryKeyLocalMachine.OpenSubKey("TortoiseGit");
+                if (subKey != null)
+                {
+                    GitPath = subKey.GetValue("MSysGit").ToString() + "\\git.exe";
+                    return;
+                }
+
+                //option3: GitForWindows
+                subKey = registryKeyCurrentUser.OpenSubKey("GitForWindows");
+                if (subKey != null)
+                {
+                    object value = subKey.GetValue("InstallPath");
+                    GitPath = value.ToString() + complement;
+                    return;
+                }
+
+                subKey = registryKeyLocalMachine.OpenSubKey("GitForWindows");
+                if (subKey != null)
+                {
+                    object value = subKey.GetValue("InstallPath");
+                    GitPath = value.ToString() + complement;
+                    return;
+                }
+
+
                 //if git path not found in registry, throw an exception
                 throw new InvalidOperationException("The git path wasn't informed and not present in registry or ProgramFiles folder. Please install git or inform the correct git path using the 'GitPath' attribute in task.");                
             }

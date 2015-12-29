@@ -9,7 +9,7 @@
     <AssemblyName>MSBuildSCMTasks</AssemblyName>
 		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe</MSTestPath>
+		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
 		<OutputPath>$(MSBuildProjectDirectory)\Output</OutputPath>
 		<DoubleQuotes>"</DoubleQuotes>
 		<TestResultsFile>TestResults\Results.trx</TestResultsFile>
@@ -52,31 +52,29 @@
 		<Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
 	</Target>
 
-  <Target Name="CheckAPIKeyFile" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="PrepareToPublish" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">
     <Error 
       Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)" 
       Condition="'$(NugetApiKeyFile)' == ''"
       />
+
+    <Message Text="* Bump version"/>
+    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+
+    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
+    <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+
+    <Message Text="* Check if changelog file is correct"/>
+    <Exec Command="notepad.exe .\CHANGELOG.md"/>
   </Target>
 
-  <Target Name="Pack" DependsOnTargets="CheckAPIKeyFile" Condition="'$(Configuration)' == 'Release'">    
-    <Message Text="Create the Output folder..."/>
+  <Target Name="Pack" DependsOnTargets="PrepareToPublish" Condition="'$(Configuration)' == 'Release'">
+    <!--Message Text="Create the Output folder..."/>
     <MakeDir Directories="$(OutputPath)"/>
     
     <Message Text ="Copy the app DLLs to output folder..."/>
-    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="$(OutputPath)"/>
-  </Target>
-    
-  <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
-    <Message Text="* Bump version"/>
-    <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="$(OutputPath)"/-->
 
-    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
-    <!--Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
-
-    <Message Text="* Check if changelog file is correct"/>
-    <!--Exec Command="notepad.exe .\CHANGELOG.md"/-->
-    
     <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
     <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
       <Output TaskParameter="Assemblies" ItemName="YourAssemblyInfo"/>
@@ -88,17 +86,18 @@
       XPath="/nu:package/nu:metadata/nu:version/."
       Value="%(YourAssemblyInfo.Version)"
       />
-    
+
     <Message Text="* Generate the NuGet Package"/>
-    <NuGetPack 
+    <NuGetPack
       ToolPath="$(NuGetPath)"
       File="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
       OutputDirectory="$(OutputPath)"
       Version="%(YourAssemblyInfo.Version)"
       Symbols="true"
       />
+  </Target>
     
-    <Message Text="* Publishing the package"/>
+  <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <ReadLinesFromFile File="$(NugetApiKeyFile)">
       <Output TaskParameter="Lines" ItemName="NugetApiKey"/>
     </ReadLinesFromFile>
@@ -112,11 +111,11 @@
     
 
     <Message Text="* Commit changes"/>
-    <!--GitAdd All="true"/>
-    <GitCommit/-->
+    <GitAdd All="true"/>
+    <GitCommit/>
 
     <Message Text="* Create tag"/>
-    <!--GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+    <GitAddTag AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
 	</Target>
 
   <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'">

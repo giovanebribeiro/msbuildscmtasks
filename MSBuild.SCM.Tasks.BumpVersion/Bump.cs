@@ -47,6 +47,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                             }
                             
                             option = (option == null) ? "patch" : option;
+                            option = option.ToLower();
                             if (option.Equals("build"))
                             {
                                 build++;
