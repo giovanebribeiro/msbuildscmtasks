@@ -52,7 +52,14 @@
 		<Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
 	</Target>
 
-  <Target Name="Pack" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">    
+  <Target Name="CheckAPIKeyFile" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">
+    <Error 
+      Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)" 
+      Condition="'$(NugetApiKeyFile)' == ''"
+      />
+  </Target>
+
+  <Target Name="Pack" DependsOnTargets="CheckAPIKeyFile" Condition="'$(Configuration)' == 'Release'">    
     <Message Text="Create the Output folder..."/>
     <MakeDir Directories="$(OutputPath)"/>
     
@@ -63,6 +70,12 @@
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
     <Message Text="* Bump version"/>
     <!--BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+
+    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
+    <!--Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
+
+    <Message Text="* Check if changelog file is correct"/>
+    <!--Exec Command="notepad.exe .\CHANGELOG.md"/-->
     
     <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
     <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
@@ -84,20 +97,19 @@
       Version="%(YourAssemblyInfo.Version)"
       Symbols="true"
       />
-
+    
     <Message Text="* Publishing the package"/>
-    <!-- You must run nuget setApiKey {put-your-api-key-here} -Source http://My_Nuget_Gallery_Service_Url/" must be run prior on the machine to ensure the api key is set correctly.-->
+    <ReadLinesFromFile File="$(NugetApiKeyFile)">
+      <Output TaskParameter="Lines" ItemName="NugetApiKey"/>
+    </ReadLinesFromFile>
+    <!--Message Text="$(NugetApiKeyFile)"/>
+    <Message Text="nuget API KEY: @(NugetApiKey)"/-->
+    
     <Exec 
       WorkingDirectory="$(OutputPath)" 
-      Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; -Source https://www.nuget.org/" 
+      Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; @(NugetApiKey)" 
       />
     
-
-    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
-    <!--Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/-->
-
-    <Message Text="* Check if changelog file is correct"/>
-    <!--Exec Command="notepad.exe .\CHANGELOG.md"/-->
 
     <Message Text="* Commit changes"/>
     <!--GitAdd All="true"/>
@@ -114,7 +126,16 @@
 	<Target Name="All">	
 		<Message Text=""/>
 		<Message Text="MSBuildSCMTasks build process"/>
-		<Message Text="Usage: msbuild .\build.proj [/p:Configuration='Debug|Release'] [/p:Bump='major|minor|patch|build'] /t:'task_name'"/>
+		<Message Text="Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
+    <Message Text=""/>
+    <Message Text="Available properties:"/>
+    <Message Text="* Configuration='Debug|Release'"/>
+    <Message Text="* Bump='major|minor|patch|build'"/>
+    <Message Text="* NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>
+    <Message Text="OBS: The nuget api file is just your nuget API key (available in your http://www.nuget.org account),"/>
+    <Message Text="     stored in a text file"/>
+    <Message Text=""/>
+    <Message Text="List of available tasks"/>
 		<Message Text="-----------------------------------------------------------------------------"/>
 		<Message Text="|  Task Name        |    Description                                        |"/>
 		<Message Text="|-------------------|-------------------------------------------------------|"/>

@@ -13,6 +13,7 @@
     <language>en-US</language>
   </metadata>
   <files>
+    <file src="..\MSBuild.SCM.Tasks.Targets" target="lib\MSBuild.SCM.Tasks.Targets" />
     <file src="..\MSBuild.SCM.Tasks.BumpVersion\bin\Release\MSBuild.SCM.Tasks.BumpVersion.dll" target="lib\MSBuild.SCM.Tasks.BumpVersion.dll" />
     <file src="..\MSBuild.SCM.Tasks.Changelog\bin\Release\MSBuild.SCM.Tasks.Changelog.dll" target="lib\MSBuild.SCM.Tasks.Changelog.dll" />
     <file src="..\MSBuild.SCM.Tasks.Git\bin\Release\MSBuild.SCM.Tasks.Git.dll" target="lib\MSBuild.SCM.Tasks.Git.dll" />
