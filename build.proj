@@ -31,6 +31,7 @@
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog\Changelog.Targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Util\Util.Targets"/>
 	
 	<Target Name="Clean">
 		<Message Text="Clean Projects"/>
