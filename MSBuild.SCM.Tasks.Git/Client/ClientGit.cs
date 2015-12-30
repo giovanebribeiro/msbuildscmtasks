@@ -137,8 +137,8 @@ namespace MSBuild.SCM.Tasks.Git.Client
         public List<string> ExecCommand(string args)
         {
 
-            Console.WriteLine("gitPath = "+GitPath);
-            Console.WriteLine("args = " + args);
+            //Console.WriteLine("gitPath = "+GitPath);
+            //Console.WriteLine("args = " + args);
 
             ProcessStartInfo psinfo = new ProcessStartInfo
             {
