@@ -85,14 +85,14 @@
   
     <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
     <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
-      <Output TaskParameter="Assemblies" ItemName="YourAssemblyInfo"/>
+      <Output TaskParameter="Assemblies" ItemName="NewAssemblyInfoVersion"/>
     </GetAssemblyIdentity>
     <xmlUpdate
       Prefix="nu"
       Namespace="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd"
       XmlFileName="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
       XPath="/nu:package/nu:metadata/nu:version/."
-      Value="%(YourAssemblyInfo.Version)"
+      Value="%(NewAssemblyInfoVersion.Version)"
       />
   </Target>
 
@@ -102,7 +102,7 @@
       ToolPath="$(NuGetPath)"
       File="$(NuGetPath)\MSBuild.SCM.Tasks.nuspec"
       OutputDirectory="@(OutputPath)"
-      Version="%(YourAssemblyInfo.Version)"
+      Version="%(NewAssemblyInfoVersion.Version)"
       Symbols="true"
       />
   </Target>
@@ -113,6 +113,11 @@
       Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)"
       Condition="'$(NugetApiKeyFile)' == ''"
       />
+
+    <Error
+      Text="$(NugetApiKeyFile) -> file not found"
+      Condition="!Exists('$(NugetApiKeyFile)')"
+      />
     
     <Message Text="* Upload the package to NuGet Gallery (API Key path: $(NugetApiKeyFile))"/>
     <ReadLinesFromFile File="$(NugetApiKeyFile)">
@@ -122,7 +127,7 @@
 
     <Exec 
       WorkingDirectory="@(OutputPath)" 
-      Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; @(NugetApiKey)" 
+      Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(NewAssemblyInfoVersion.Version).nupkg&quot; @(NugetApiKey)" 
       />
     
     <Message Text="* Commit changes"/>
