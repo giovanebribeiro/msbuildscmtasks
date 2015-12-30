@@ -10,7 +10,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion
 {
     public class Bump
     {
-        public static string Calc(string assemblyInfoPath, string option, bool showBuild)
+        public static string Calc(string assemblyInfoPath, string option)
         {
             string newVersion = null;
             string assemblyInfoTemp = assemblyInfoPath + ".temp";
@@ -75,11 +75,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                                 throw new InvalidDataException("Invalid option: " + option);
                             }
 
-                            newVersion = major + "." + minor + "." + patch;
-                            if (showBuild)
-                            {
-                                newVersion += "." + build;
-                            }
+                            newVersion = major + "." + minor + "." + patch + "." + build;
 
                             line = line.Replace(versionNumber, newVersion);
                         }

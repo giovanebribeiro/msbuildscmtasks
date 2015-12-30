@@ -23,13 +23,9 @@ namespace MSBuild.SCM.Tasks.BumpVersion
         /// </summary>
         public string Option { get; set; }
 
-        /// <summary>
-        /// Show the build component in version number.
-        /// </summary>
-        public bool ShowBuild { get; set; }
         public override bool Execute()
         {
-            Bump.Calc(AssemblyInfoPath, Option, ShowBuild);
+            Bump.Calc(AssemblyInfoPath, Option);
             return true;
         }
 

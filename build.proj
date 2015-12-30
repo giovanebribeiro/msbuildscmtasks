@@ -74,9 +74,7 @@
 
     <Message Text="* Check if changelog file is correct"/>
     <Exec Command="notepad.exe .\CHANGELOG.md"/>
-  </Target>
-
-  <Target Name="Pack" DependsOnTargets="PrepareToPublish" Condition="'$(Configuration)' == 'Release'">
+  
     <Message Text="* Update version in MSBuild.SCM.Tasks.nuspec file"/>
     <GetAssemblyIdentity AssemblyFiles="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.Util/bin/$(Configuration)/MSBuild.SCM.Tasks.Util.dll">
       <Output TaskParameter="Assemblies" ItemName="YourAssemblyInfo"/>
@@ -88,7 +86,9 @@
       XPath="/nu:package/nu:metadata/nu:version/."
       Value="%(YourAssemblyInfo.Version)"
       />
+  </Target>
 
+  <Target Name="Pack" DependsOnTargets="PrepareToPublish" Condition="'$(Configuration)' == 'Release'">
     <Message Text="* Generate the NuGet Package"/>
     <NuGetPack
       ToolPath="$(NuGetPath)"
