@@ -16,7 +16,7 @@ For more details check our wiki!
 
 ## How to install?
 
-You must use the NuGet Package Manager
+You must use the [NuGet Package Manager Console](http://docs.nuget.org/consume/package-manager-console)
 ```
 > Install-Package MSBuildSCMTasks
 ```
