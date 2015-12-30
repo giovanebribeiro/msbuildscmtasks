@@ -5,7 +5,7 @@
 	>
 
   <ItemGroup>
-    <OutputPath Include="$(MSBuildProjectDirectory)\tasks"/>
+    <OutputPath Include="$(MSBuildProjectDirectory)\tools"/>
     <TestResultsFile Include="$(MSBuildProjectDirectory)\TestResults"/>
   </ItemGroup>
 

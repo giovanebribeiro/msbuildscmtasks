@@ -14,9 +14,9 @@
   </metadata>
   <files>
     <file src="..\MSBuild.SCM.Tasks.Targets" target="MSBuild.SCM.Tasks.Targets" />
-    <file src="..\MSBuild.SCM.Tasks.Util\bin\Release\MSBuild.SCM.Tasks.Util.dll" target="tasks\MSBuild.SCM.Tasks.Util.dll" />
-    <file src="..\MSBuild.SCM.Tasks.BumpVersion\bin\Release\MSBuild.SCM.Tasks.BumpVersion.dll" target="tasks\MSBuild.SCM.Tasks.BumpVersion.dll" />
-    <file src="..\MSBuild.SCM.Tasks.Changelog\bin\Release\MSBuild.SCM.Tasks.Changelog.dll" target="tasks\MSBuild.SCM.Tasks.Changelog.dll" />
-    <file src="..\MSBuild.SCM.Tasks.Git\bin\Release\MSBuild.SCM.Tasks.Git.dll" target="tasks\MSBuild.SCM.Tasks.Git.dll" />
+    <file src="..\MSBuild.SCM.Tasks.Util\bin\Release\MSBuild.SCM.Tasks.Util.dll" target="tools\MSBuild.SCM.Tasks.Util.dll" />
+    <file src="..\MSBuild.SCM.Tasks.BumpVersion\bin\Release\MSBuild.SCM.Tasks.BumpVersion.dll" target="tools\MSBuild.SCM.Tasks.BumpVersion.dll" />
+    <file src="..\MSBuild.SCM.Tasks.Changelog\bin\Release\MSBuild.SCM.Tasks.Changelog.dll" target="tools\MSBuild.SCM.Tasks.Changelog.dll" />
+    <file src="..\MSBuild.SCM.Tasks.Git\bin\Release\MSBuild.SCM.Tasks.Git.dll" target="tools\MSBuild.SCM.Tasks.Git.dll" />
   </files>
 </package>

@@ -199,3 +199,4 @@ FakesAssemblies/
 # Other temp files
 *.temp
 tasks/
+tools/

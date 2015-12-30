@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.BumpVersion.dll" TaskName="BumpVersion"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAdd"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAddTag"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Git.dll" TaskName="GitCommit"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Git.dll" TaskName="GitPush"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Git.dll" TaskName="GitStatus"/>
-  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tasks\MSBuild.SCM.Tasks.Changelog.dll" TaskName="Changelog"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.BumpVersion.dll" TaskName="BumpVersion"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAdd"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Git.dll" TaskName="GitAddTag"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Git.dll" TaskName="GitCommit"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Git.dll" TaskName="GitPush"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Git.dll" TaskName="GitStatus"/>
+  <UsingTask AssemblyFile="$(MSBuildThisFileDirectory)\tools\MSBuild.SCM.Tasks.Changelog.dll" TaskName="Changelog"/>
 
 </Project>
