@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <OutputPath Include="$(MSBuildProjectDirectory)\tasks"/>
+    <TestResultsFile Include="$(MSBuildProjectDirectory)\TestResults\Results.trx"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -14,8 +15,7 @@
 		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
-		<DoubleQuotes>"</DoubleQuotes>
-		<TestResultsFile>TestResults\Results.trx</TestResultsFile>
+		<DoubleQuotes>"</DoubleQuotes>		
     <Bump Condition="'$(Bump)' == ''">patch</Bump>
     <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
     <NuGetPath>$(MSBuildProjectDirectory)\NuGet</NuGetPath>
@@ -34,42 +34,38 @@
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Util\Util.Targets"/>
 	
 	<Target Name="Clean">
-		<Message Text="Clean Projects"/>
 		<MSBuild Projects="$(SolutionFile)" Targets="Clean"/>
-		<Delete Files="$(TestResultsFile)"/>
+		<Delete Files="@(TestResultsFile)"/>
     <RemoveDir Directories="@(OutputPath)"/>
     <MakeDir Directories="@(OutputPath)"/>
 	</Target>
+
+  <Target Name="PreCompile" DependsOnTargets="Clean" Condition="'$(Configuration)' == 'Release'">
+    <Message Text="* Bump version"/>
+    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+  </Target>
 	
-	<Target Name="Compile" DependsOnTargets="Clean">
-		<Message Text="Build Files"/>
+	<Target Name="Compile" DependsOnTargets="PreCompile">
+		<Message Text="* Build Files"/>
 		<MSBuild 
 		Projects="$(SolutionFile)"
 		Properties="Configuration=$(Configuration)"
 		/>
-	</Target>
-	
-	<Target Name="RunTests" DependsOnTargets="Compile">
-		<PropertyGroup>
-			<MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"$(TestResultsFile)"</MSTestCommand>
-		</PropertyGroup>
-		
-		<Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
+
+    <Message Text="* Execute Tests"/>
+    <PropertyGroup>
+      <MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"$(TestResultsFile)"</MSTestCommand>
+    </PropertyGroup>
+
+    <Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
 	</Target>
 
-  <Target Name="PrepareToPublish" DependsOnTargets="RunTests" Condition="'$(Configuration)' == 'Release'">
-    <Error 
-      Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)" 
-      Condition="'$(NugetApiKeyFile)' == ''"
-      />
+  <Target Name="PostCompile" DependsOnTargets="Compile" Condition="'$(Configuration)' == 'Release'">
     <Message Text ="Copy the app DLLs to output folder..."/>
     <Message Text="@(OutputPath->'%(FullPath)')"/>
-    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="@(OutputPath->'%(FullPath)')"/>
+    <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="@(OutputPath->'%(FullPath)')"/>    
 
-    <Message Text="* Bump version"/>
-    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
-
-    <Message Text="* Update Changelog The default path is '.\CHANGELOG.md'"/>
+    <Message Text="* Update Changelog (The default path is '.\CHANGELOG.md')"/>
     <Changelog AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
 
     <Message Text="* Check if changelog file is correct"/>
@@ -88,7 +84,7 @@
       />
   </Target>
 
-  <Target Name="Pack" DependsOnTargets="PrepareToPublish" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="Pack" DependsOnTargets="PostCompile" Condition="'$(Configuration)' == 'Release'">
     <Message Text="* Generate the NuGet Package"/>
     <NuGetPack
       ToolPath="$(NuGetPath)"
@@ -100,6 +96,13 @@
   </Target>
     
   <Target Name="Publish" DependsOnTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Message Text="* Check if key is set."/>
+    <Error
+      Text="NugetApiKeyFile property not set (/p:NugetApiKeyFile=/path/to/key/file)"
+      Condition="'$(NugetApiKeyFile)' == ''"
+      />
+    
+    <Message Text="* Upload the package to NuGet Gallery"/>
     <ReadLinesFromFile File="$(NugetApiKeyFile)">
       <Output TaskParameter="Lines" ItemName="NugetApiKey"/>
     </ReadLinesFromFile>
@@ -111,7 +114,6 @@
       Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; @(NugetApiKey)" 
       />
     
-
     <Message Text="* Commit changes"/>
     <GitAdd All="true"/>
     <GitCommit/>
@@ -125,36 +127,45 @@
   </Target>
   
   <Target Name="All">	
-		<Message Text=""/>
-		<Message Text="MSBuildSCMTasks build process"/>
-		<Message Text="Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
-    <Message Text=""/>
-    <Message Text="Available properties:"/>
-    <Message Text="* Configuration='Debug|Release'"/>
-    <Message Text="* Bump='major|minor|patch|build'"/>
-    <Message Text="* NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>
-    <Message Text="OBS: The nuget api file is just your nuget API key (available in your http://www.nuget.org account),"/>
-    <Message Text="     stored in a text file"/>
-    <Message Text=""/>
-    <Message Text="List of available tasks"/>
-		<Message Text="-----------------------------------------------------------------------------"/>
-		<Message Text="|  Task Name        |    Description                                        |"/>
-		<Message Text="|-------------------|-------------------------------------------------------|"/>
-		<Message Text="| Clean             | * Clean the old compiled files                        |"/>
-		<Message Text="|-------------------|-------------------------------------------------------|"/>
-		<Message Text="| Compile           | * Clean the old compiled files                        |"/>
-		<Message Text="|                   | * Compile the project and generates the new files     |"/>
-		<Message Text="|-------------------|-------------------------------------------------------|"/>
-		<Message Text="| RunTests          | * Clean the old compiled files                        |"/>
-		<Message Text="|                   | * Compile the project and generates the new files     |"/>
-		<Message Text="|                   | * Run all tests                                       |"/>
-    <Message Text="|-------------------|-------------------------------------------------------|"/>
-    <Message Text="| Build (only works | * Clean the old compiled files                        |"/>
-    <Message Text="|    with 'Release' | * Compile the project and generates the new files     |"/>
-    <Message Text="|    configuration) | * Run all tests                                       |"/>
-		<Message Text="|                   | * Pack the files                                      |"/>
-		<Message Text="-----------------------------------------------------------------------------"/>
-    <Message Text=""/>
+		<Message Text="# "/>
+		<Message Text="# MSBuildSCMTasks build process"/>
+		<Message Text="# Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
+    <Message Text="# "/>
+    <Message Text="# Available properties:"/>
+    <Message Text="# * Configuration='Debug|Release'"/>
+    <Message Text="# * Bump='major|minor|patch|build'"/>
+    <Message Text="# * NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>
+    <Message Text="# OBS: The nuget api file is just your nuget API key (available in your http://www.nuget.org account),"/>
+    <Message Text="#      stored in a text file"/>
+    <Message Text="# "/>
+    <Message Text="# List of available tasks"/>
+		<Message Text="# --------------------------------------------------------------------------------------------------"/>
+		<Message Text="# |  Task Name             | Depends on task |    Description                                      |"/>
+		<Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+		<Message Text="# | Clean                  |    -            | * Clean the old compiled files                      |"/>
+		<Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+    <Message Text="# | PreCompile (only       | Clean           | * Bump the version of GeneralAssemblyInfo.cs        |"/>
+    <Message Text="# |   executes if          |                 |                                                     |"/>
+    <Message Text="# |   mode = 'Release'     |                 |                                                     |"/>
+    <Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+		<Message Text="# | Compile                | PreCompile      | * Compile the project and make the tests            |"/>
+		<Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+		<Message Text="# | PostCompile (only      | Compile         | * Copy the app DLLs to output folder...             |"/>
+    <Message Text="# |   executes if          |                 | * Update Changelog (The default path is             |"/>
+    <Message Text="# |   mode = 'Release'     |                 |   '.\CHANGELOG.md')                                 |"/>
+    <Message Text="# |                        |                 | * Update version in MSBuild.SCM.Tasks.nuspec file   |"/>
+    <Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+    <Message Text="# | Pack (only executes    | PostCompile     | * Generate the NuGet Package                        |"/>
+    <Message Text="# |   if mode = 'Release') |                 |                                                     |"/>
+    <Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+    <Message Text="# | Publish (only executes | Pack            | * Generate the NuGet Package                        |"/>
+    <Message Text="# |   if mode = 'Release') |                 | * Upload the package to NuGet Gallery               |"/>
+    <Message Text="# |                        |                 | * Commit the changes (CHANGELOG, AssemblyInfo, etc) |"/>
+    <Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
+    <Message Text="# | Build (only executes   | Publish         | * Final message                                     |"/>
+    <Message Text="# |   if mode = 'Release') |                 |                                                     |"/>
+		<Message Text="# --------------------------------------------------------------------------------------------------"/>
+    <Message Text="#"/>
 	</Target>
 	
 </Project>
