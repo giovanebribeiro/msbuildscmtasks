@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MSBuildSCMTasks</id>
-    <version>0.0.1.0</version>
+    <version>0.0.2.0</version>
     <title>MSBuild.SCM.Tasks</title>
     <authors>Giovane Boaviagem Ribeiro</authors>
     <owners>NA</owners>

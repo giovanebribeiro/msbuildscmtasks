@@ -114,13 +114,12 @@
       Condition="'$(NugetApiKeyFile)' == ''"
       />
     
-    <Message Text="* Upload the package to NuGet Gallery"/>
+    <Message Text="* Upload the package to NuGet Gallery (API Key path: $(NugetApiKeyFile))"/>
     <ReadLinesFromFile File="$(NugetApiKeyFile)">
       <Output TaskParameter="Lines" ItemName="NugetApiKey"/>
-    </ReadLinesFromFile>
-    <!--Message Text="$(NugetApiKeyFile)"/>
-    <Message Text="nuget API KEY: @(NugetApiKey)"/-->
-    
+    </ReadLinesFromFile>    
+    <Message Text="nuget API KEY: @(NugetApiKey)"/>
+
     <Exec 
       WorkingDirectory="@(OutputPath)" 
       Command="$(NuGetPath)\NuGet.exe push &quot;$(AssemblyName).%(YourAssemblyInfo.Version).nupkg&quot; @(NugetApiKey)" 
@@ -143,7 +142,7 @@
 		<Message Text="# MSBuildSCMTasks build process"/>
 		<Message Text="# Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
     <Message Text="# "/>
-    <Message Text="# Available properties:"/>
+    <Message Text="# Available properties (Values MUST be put without quotes of any kind):"/>
     <Message Text="# * Configuration='Debug|Release' (Default: Debug)"/>
     <Message Text="# * Bump='major|minor|patch|build' (Default: patch)"/>
     <Message Text="# * NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>

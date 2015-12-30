@@ -1,3 +1,22 @@
+# 0.0.2.0 (30/12/2015)
+
+
+### Features
+
+
+* **build:** adding nuget support ([407ef44](https://github.com/giovanebribeiro/msbuildscmtasks/commit/407ef44))
+
+### Bug Fixes
+
+
+* **build:** adjustments to bump AssemblyInfo ([d7dbadb](https://github.com/giovanebribeiro/msbuildscmtasks/commit/d7dbadb))
+* **build:** make bump version before compile ([24a7161](https://github.com/giovanebribeiro/msbuildscmtasks/commit/24a7161))
+* **build:** add file Util.targets ([c2320f0](https://github.com/giovanebribeiro/msbuildscmtasks/commit/c2320f0))
+*  path adjustments in targets file ([d7ed84e](https://github.com/giovanebribeiro/msbuildscmtasks/commit/d7ed84e))
+*  Build and Git Client adjustments ([a326029](https://github.com/giovanebribeiro/msbuildscmtasks/commit/a326029))
+* **build:** add missing dll to NuGet package ([557a5c3](https://github.com/giovanebribeiro/msbuildscmtasks/commit/557a5c3))
+
+
 # 0.0.1.0 (28/12/2015)
 ### Features
 
