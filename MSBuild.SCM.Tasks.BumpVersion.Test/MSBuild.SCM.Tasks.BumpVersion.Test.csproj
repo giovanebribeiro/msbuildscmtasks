@@ -88,6 +88,40 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!--
+  
+  After build of this project, we must to do:
+  
+  * Execute the tests 
+  * Bump the version of GeneralAssemblyInfo.cs file to patch, build, etc.
+  
+  -->
+  <Import Project="$(MSBuildProjectDirectory)\..\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.targets"/>
+  <PropertyGroup>
+    <!-- Temp folder to store temporarially the assemblies-->
+    <TasksFolder>$(MSBuildThisFileDirectory)\tasks</TasksFolder>
+  </PropertyGroup>
+  <UsingTask AssemblyFile="$(TasksFolder)\MSBuild.SCM.Tasks.BumpVersion.dll" TaskName="BumpVersion"/>
+  <Target Name="AfterBuild" Condition="'$(Configuration)|$(Flag)' == 'Release|true'">
+    <Message Text="* Copy the needed assemblies to a temp folder"/>    
+    <ItemGroup>
+      <BumpVersionAssemblies Include="$(MSBuildThisFileDirectory)\..\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.dll"/>
+      <BumpVersionAssemblies Include="$(MSBuildThisFileDirectory)\..\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.Util.dll"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(BumpVersionAssemblies)" DestinationFolder="$(TasksFolder)"/>
+
+    <Message Text="* Test only the BumpVersion dll..."/>    
+    <PropertyGroup>
+      <BumpVersionTestDll>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(AssemblyName).dll</BumpVersionTestDll>
+      <BumpTestCommand>"$(MSTestPath)" /testcontainer:"$(BumpVersionTestDll)"</BumpTestCommand>      
+    </PropertyGroup>
+    <Exec Command="$(BumpTestCommand)" ContinueOnError="false"/>
+
+    <Message Text="* ... to bump the version of GeneralAssemblyInfo.cs"/>
+    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\..\GeneralAssemblyInfo.cs"/>
+  </Target>
+  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

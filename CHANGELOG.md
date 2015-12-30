@@ -1,21 +1,4 @@
-# 0.0.2.0 (29/12/15)
-
-
-### Features
-
-
-* **build:** adding nuget support ([407ef44](https://github.com/giovanebribeiro/msbuildscmtasks/commit/407ef44))
-
-### Bug Fixes
-
-
-* **build:** add file Util.targets ([c2320f0](https://github.com/giovanebribeiro/msbuildscmtasks/commit/c2320f0))
-*  path adjustments in targets file ([d7ed84e](https://github.com/giovanebribeiro/msbuildscmtasks/commit/d7ed84e))
-*  Build and Git Client adjustments ([a326029](https://github.com/giovanebribeiro/msbuildscmtasks/commit/a326029))
-* **build:** add missing dll to NuGet package ([557a5c3](https://github.com/giovanebribeiro/msbuildscmtasks/commit/557a5c3))
-
-
-# 0.0.1 (28/12/2015)
+# 0.0.1.0 (28/12/2015)
 ### Features
 
 

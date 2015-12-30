@@ -81,14 +81,19 @@ namespace MSBuild.SCM.Tasks.BumpVersion
                         }
 
                         writer.WriteLine(line);
-                    }
-                }
-            }
+                                                
+                    }//end while
 
-            // move file to correct place
-            File.Delete(assemblyInfoPath);
-            File.Copy(assemblyInfoTemp, assemblyInfoPath, true);
-            File.Delete(assemblyInfoTemp);
+                    writer.Flush();
+                    writer.Close();
+                }//end writer context
+                reader.Close();
+
+                // move file to correct place
+                File.Delete(assemblyInfoPath);
+                File.Copy(assemblyInfoTemp, assemblyInfoPath, true);
+                File.Delete(assemblyInfoTemp);
+            }// end reader context
 
             return newVersion;
         }

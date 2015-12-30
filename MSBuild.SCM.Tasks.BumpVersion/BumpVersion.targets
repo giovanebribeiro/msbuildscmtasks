@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <TestAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion.Test\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.Test.dll"/>
+    <TestAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion.Test\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.Test.dll">
+      <Id>BumpVersion</Id>
+    </TestAssemblies>
     <AppAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\bin\$(Configuration)\MSBuild.SCM.Tasks.BumpVersion.dll"></AppAssemblies>
   </ItemGroup>
 </Project>

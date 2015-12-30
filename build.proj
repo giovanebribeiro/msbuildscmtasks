@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <OutputPath Include="$(MSBuildProjectDirectory)\tasks"/>
-    <TestResultsFile Include="$(MSBuildProjectDirectory)\TestResults\Results.trx"/>
+    <TestResultsFile Include="$(MSBuildProjectDirectory)\TestResults"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -14,6 +14,7 @@
     <AssemblyName>MSBuildSCMTasks</AssemblyName>
 		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
 		<DoubleQuotes>"</DoubleQuotes>		
     <Bump Condition="'$(Bump)' == ''">patch</Bump>
@@ -35,18 +36,30 @@
 	
 	<Target Name="Clean">
 		<MSBuild Projects="$(SolutionFile)" Targets="Clean"/>
-		<Delete Files="@(TestResultsFile)"/>
+		<RemoveDir Directories="@(TestResultsFile)"/>
+    <MakeDir Directories="@(TestResultsFile)"/>
     <RemoveDir Directories="@(OutputPath)"/>
     <MakeDir Directories="@(OutputPath)"/>
 	</Target>
 
-  <Target Name="PreCompile" DependsOnTargets="Clean" Condition="'$(Configuration)' == 'Release'">
-    <Message Text="* Bump version"/>
-    <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\GeneralAssemblyInfo.cs"/>
+  <Target Name="PreCompile" Condition="'$(Configuration)' == 'Release'">
+    <!--Variables to compile the bump version only-->
+
+    <PropertyGroup>
+      <BumpVersionTestProj>$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.BumpVersion.Test/MSBuild.SCM.Tasks.BumpVersion.Test.csproj</BumpVersionTestProj>
+    </PropertyGroup>
+
+    <!--
+    Compile the BumpVersion.Test project, to update the version of GeneralAssemblyInfo.cs
+    -->
+    <MSBuild
+		Projects="$(BumpVersionTestProj)"
+		Properties="Configuration=$(Configuration);Bump=$(Bump);Platform=$(Platform);MSTestPath=$(MSTestPath);Flag=true"
+    />
   </Target>
 	
-	<Target Name="Compile" DependsOnTargets="PreCompile">
-		<Message Text="* Build Files"/>
+	<Target Name="Compile" DependsOnTargets="Clean;PreCompile">
+		<Message Text="* Build all projects"/>
 		<MSBuild 
 		Projects="$(SolutionFile)"
 		Properties="Configuration=$(Configuration)"
@@ -54,15 +67,14 @@
 
     <Message Text="* Execute Tests"/>
     <PropertyGroup>
-      <MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"$(TestResultsFile)"</MSTestCommand>
+      <MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"@(TestResultsFile->'%(FullPath)')\Results.trx"</MSTestCommand>
     </PropertyGroup>
 
     <Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
 	</Target>
 
   <Target Name="PostCompile" DependsOnTargets="Compile" Condition="'$(Configuration)' == 'Release'">
-    <Message Text ="Copy the app DLLs to output folder..."/>
-    <Message Text="@(OutputPath->'%(FullPath)')"/>
+    <Message Text ="Copy the other app DLLs to output folder..."/>
     <Copy SourceFiles="@(AppAssemblies)" DestinationFolder="@(OutputPath->'%(FullPath)')"/>    
 
     <Message Text="* Update Changelog (The default path is '.\CHANGELOG.md')"/>
@@ -132,8 +144,8 @@
 		<Message Text="# Usage: msbuild .\build.proj [ [/p:opt1] [/p:opt2] ... ] /t:'task_name'"/>
     <Message Text="# "/>
     <Message Text="# Available properties:"/>
-    <Message Text="# * Configuration='Debug|Release'"/>
-    <Message Text="# * Bump='major|minor|patch|build'"/>
+    <Message Text="# * Configuration='Debug|Release' (Default: Debug)"/>
+    <Message Text="# * Bump='major|minor|patch|build' (Default: patch)"/>
     <Message Text="# * NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>
     <Message Text="# OBS: The nuget api file is just your nuget API key (available in your http://www.nuget.org account),"/>
     <Message Text="#      stored in a text file"/>
