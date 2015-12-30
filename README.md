@@ -13,3 +13,19 @@ For more details check our wiki!
 | GitAddTag     | Add a tag to git repository                                                   |
 | GitCommit     | Commit changes in git repository                                              |
 | GitStatus     | Show git repository status                                                    |
+
+## How to install?
+
+You must use the NuGet Package Manager
+```
+> Install-Package MSBuildSCMTasks
+```
+
+## How to use?
+In your build.proj file, include these line
+```xml
+<Import Project="$(MSBuildProjectDirectory)\packages\MSBuildSCMTasks<most.recent.release>\MSBuild.SCM.Tasks.Targets"/>
+```
+To allow the use of tasks in your build.
+
+More details about each task, check the wiki (on contruction).
