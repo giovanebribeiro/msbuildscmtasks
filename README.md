@@ -7,7 +7,7 @@ For more details check our wiki!
 
 | Task Name     | Description                                                                   |
 |:-------------:|:------------------------------------------------------------------------------|
-| BumpVersion   | Bump the "AssemblyVersion" property on AssemblyInfo.cs file                   |
+| [BumpVersion](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-BumpVersion)   | Bump the "AssemblyVersion" property on AssemblyInfo.cs file                   |
 | Changelog     | Updates the CHANGELOG.md file with the last commits between last tag and HEAD |
 | GitAdd        | Add files to a git repository                                                 |
 | GitAddTag     | Add a tag to git repository                                                   |
