@@ -7,6 +7,7 @@
   <ItemGroup>
     <OutputPath Include="$(MSBuildProjectDirectory)\tools"/>
     <TestResultsFile Include="$(MSBuildProjectDirectory)\TestResults"/>
+    <AppAssemblies Include="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Targets"/>
   </ItemGroup>
 
   <PropertyGroup>

@@ -13,7 +13,8 @@
     <language>en-US</language>
   </metadata>
   <files>
-    <file src="..\MSBuild.SCM.Tasks.Targets" target="MSBuild.SCM.Tasks.Targets" />
+    <file src="..\MSBuild.SCM.Tasks.Targets" target="tools\MSBuild.SCM.Tasks.Targets" />
+    <file src="..\Install.ps1" target="tools\Install.ps1" />
     <file src="..\MSBuild.SCM.Tasks.Util\bin\Release\MSBuild.SCM.Tasks.Util.dll" target="tools\MSBuild.SCM.Tasks.Util.dll" />
     <file src="..\MSBuild.SCM.Tasks.BumpVersion\bin\Release\MSBuild.SCM.Tasks.BumpVersion.dll" target="tools\MSBuild.SCM.Tasks.BumpVersion.dll" />
     <file src="..\MSBuild.SCM.Tasks.Changelog\bin\Release\MSBuild.SCM.Tasks.Changelog.dll" target="tools\MSBuild.SCM.Tasks.Changelog.dll" />
