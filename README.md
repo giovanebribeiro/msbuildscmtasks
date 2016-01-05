@@ -9,10 +9,10 @@ For more details check our wiki!
 |:-------------:|:------------------------------------------------------------------------------|
 | [BumpVersion](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-BumpVersion)   | Bump the "AssemblyVersion" property on AssemblyInfo.cs file                   |
 | [Changelog](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-Changelog)     | Updates the CHANGELOG.md file with the last commits between last tag and HEAD |
-| GitAdd        | Add files to a git repository                                                 |
-| GitAddTag     | Add a tag to git repository                                                   |
-| GitCommit     | Commit changes in git repository                                              |
-| GitStatus     | Show git repository status                                                    |
+| [GitAdd](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-Git#git-task-add)        | Add files to a git repository                                                 |
+| [GitAddTag](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-Git#git-task-add-tag)     | Add a tag to git repository                                                   |
+| [GitCommit](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-Git#git-task-commit)     | Commit changes in git repository                                              |
+| [GitStatus](https://github.com/giovanebribeiro/msbuildscmtasks/wiki/Available-Tasks:-Git#git-task-status)     | Show git repository status                                                    |
 
 ## How to install?
 
