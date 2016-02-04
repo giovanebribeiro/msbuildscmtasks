@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <TestResultsFile>$(MSBuildProjectDirectory)\TestResults</TestResultsFile>
     <ProjectName>MSBuild.SCM.Tasks</ProjectName>
     <AssemblyName>MSBuildSCMTasks</AssemblyName>
 		<SolutionFile>./Giovanebribeiro.$(ProjectName).sln</SolutionFile>	
@@ -72,7 +73,7 @@
     </PropertyGroup-->
 
     <!--Exec Command="$(MSTestCommand)" ContinueOnError="false"/-->
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(ProgramFiles)\NUnit.org\nunit-console"/>
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(MSBuildProjectDirectory)\..\testrunner\NUnit.Console.3.0.1\tools"/>
     
 	</Target>
 
@@ -142,6 +143,8 @@
 	</Target>
 
   <Target Name="Build" DependsOnTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+    <RemoveDir Directories="@(OutputPath)"/>
+    <Delete Files="$(TestResultsFile)" />
     <Message Text="Build process finished. Please push the changes to remote repo using 'git push origin master --tags'."/>
   </Target>
   

@@ -121,7 +121,7 @@
     <ItemGroup>
       <BumpVersionTestDll Include="$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(AssemblyName).dll" />
     </ItemGroup>
-    <NUnit Assemblies="@(BumpVersionTestDll)" ToolPath="$(ProgramFiles)\NUnit.org\nunit-console" />
+    <NUnit Assemblies="@(BumpVersionTestDll)" ToolPath="$(MSBuildProjectDirectory)\..\testrunner\NUnit.Console.3.0.1\tools" />
     <Message Text="* ... to bump the version of GeneralAssemblyInfo.cs" />
     <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\..\GeneralAssemblyInfo.cs" />
   </Target>

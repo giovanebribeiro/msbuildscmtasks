@@ -1,4 +1,4 @@
-# MSBuild SCM Tasks
+# MSBuild SCM Tasks [![Build Status](https://travis-ci.org/giovanebribeiro/msbuildscmtasks.svg?branch=master)](https://travis-ci.org/giovanebribeiro/msbuildscmtasks)
 
 A set of MSBuild tasks to increase productivity for Software Configuration Managers.
 
