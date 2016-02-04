@@ -1,18 +1,19 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
 
 namespace MSBuild.SCM.Tasks.Git.Test
 {
-    [TestClass]
+    [TestFixture]
     public class PushTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Push";
         private static string dummyRepoRemote = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_PushRemote";
-        [ClassInitialize]
-        public static void CreateDummyRepo(TestContext context)
+
+        [OneTimeSetUp]
+        public static void CreateDummyRepo()
         {
             if (Directory.Exists(dummyRepo))
             {
@@ -36,7 +37,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             ClientGit.Instance.ExecCommand("remote add origin file://" + dummyRepoRemote);
         }
 
-        [TestMethod]
+        [Test]
         public void PushDefaultValues()
         {
             string contentFile1 = dummyRepo + "\\testFile1.txt";
@@ -53,7 +54,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(output[1].Contains("nothing to commit, working directory clean"));
         }
 
-        [TestMethod]
+        [Test]
         public void PushToAnotherBranch()
         {
             // create a new branch
@@ -81,7 +82,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.AreEqual("nothing to commit, working directory clean",output[1]);
         }
 
-        [TestMethod]
+        [Test]
         public void PushTask()
         {
             string contentFile2 = dummyRepo + "\\testFile2.txt";

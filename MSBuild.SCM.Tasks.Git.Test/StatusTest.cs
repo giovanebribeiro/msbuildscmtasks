@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using MSBuild.SCM.Tasks.Git.Client;
@@ -7,12 +7,13 @@ using System.IO;
 
 namespace MSBuild.SCM.Tasks.Git.Test
 {
-    [TestClass]
+    [TestFixture]
     public class StatusTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Status2";
-        [ClassInitialize]
-        public static void CreateDummyRepo(TestContext context)
+
+        [OneTimeSetUp]
+        public static void CreateDummyRepo()
         {
             if (Directory.Exists(dummyRepo))
             {
@@ -25,7 +26,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
-        [TestMethod]
+        [Test]
         public void LibraryTest()
         {
             List<string> output = Status.ExecCommand();
@@ -34,7 +35,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(output.Single(s => s != null && s.Contains("nothing to commit")) != null);
         }
 
-        [TestMethod]
+        [Test]
         public void TaskStatusTest()
         {
             GitStatus t = new GitStatus();

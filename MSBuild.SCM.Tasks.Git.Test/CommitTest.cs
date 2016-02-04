@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Diagnostics;
 
 namespace MSBuild.SCM.Tasks.Git.Test
 {
-    [TestClass]
+    [TestFixture]
     public class CommitTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Commit";
-        [ClassInitialize]
-        public static void CreateDummyRepo(TestContext context)
+
+        [OneTimeSetUp]
+        public static void CreateDummyRepo()
         {
             if (Directory.Exists(dummyRepo))
             {
@@ -27,7 +28,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
-        [TestMethod]
+        [Test]
         public void WithoutMessageAddFalse()
         {
             string contentFile1 = dummyRepo + "\\testFile1.txt";
@@ -44,7 +45,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(output[2].Contains("create mode") && output[2].Contains("testFile1.txt"));
         }
 
-        [TestMethod]
+        [Test]
         public void WithMessageAddTrue()
         {
             string contentFile2 = dummyRepo + "\\testFile2.txt";
@@ -70,7 +71,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(output[1].Contains("1 file changed"));
         }
 
-        [TestMethod]
+        [Test]
         public void AddTwoFilesButCommitOne()
         {
             string contentFile3 = dummyRepo + "\\testFile3.txt";
@@ -89,7 +90,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(output[2].Contains("create mode"));
         }
 
-        [TestMethod]
+        [Test]
         public void TaskCommitTest()
         {
             // create a file to commit

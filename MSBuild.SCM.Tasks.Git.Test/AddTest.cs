@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using System.Linq;
 using MSBuild.SCM.Tasks.Git.Client;
@@ -7,12 +7,13 @@ using System.Collections.Generic;
 
 namespace MSBuild.SCM.Tasks.Git.Test
 {
-    [TestClass]
+    [TestFixture]
     public class AddTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Add";
-        [ClassInitialize]
-        public static void CreateDummyRepo(TestContext context)
+
+        [OneTimeSetUp]
+        public static void CreateDummyRepo()
         {
             if (Directory.Exists(dummyRepo))
             {
@@ -26,7 +27,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
-        [TestMethod]
+        [Test]
         public void AddFile()
         {
             string contentFile1 = dummyRepo + "\\testFile1.txt";
@@ -44,7 +45,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile1.txt"))) != null);            
         }
 
-        [TestMethod]
+        [Test]
         public void AddAllFiles()
         {
             string contentFile2 = dummyRepo + "\\testFile2.txt";
@@ -77,7 +78,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue((output.Single(s => s != null && s.Contains("testFile5.txt"))) != null);
         }
 
-        [TestMethod]
+        [Test]
         public void TaskAddTest()
         {
             string contentFile1 = dummyRepo + "\\testFile1.txt";

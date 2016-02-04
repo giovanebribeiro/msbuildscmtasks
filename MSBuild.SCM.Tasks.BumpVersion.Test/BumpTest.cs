@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 
 namespace MSBuild.SCM.Tasks.BumpVersion.Test
 {
-    [TestClass]
+    [TestFixture]
     public class BumpTest
     {
         private static string assemblyInfoPath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%")+"\\AssemblyTest.txt";
@@ -14,7 +14,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             return line.Substring(line.IndexOf('(') + 2, line.LastIndexOf(')') - line.IndexOf('(') - 3);
         }
 
-        [TestInitialize]
+        [SetUp]
         public void InitTestFile()
         {
             using (var writer = new StreamWriter(assemblyInfoPath))
@@ -28,13 +28,13 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             //File.Copy(assemblyInfoTemp, assemblyInfoPath, true);
         }
 
-        [TestCleanup]
+        [TearDown]
         public void DestroyTestFile()
         {
             File.Delete(assemblyInfoPath);
         }
 
-        [TestMethod]
+        [Test]
         public void BuildOption()
         {
             Bump.Calc(assemblyInfoPath, "build");
@@ -46,7 +46,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PatchOption()
         {
             Bump.Calc(assemblyInfoPath, "patch");
@@ -70,7 +70,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MinorOption()
         {
             Bump.Calc(assemblyInfoPath, "minor");
@@ -82,7 +82,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PatchAfterMinor()
         {
             Bump.Calc(assemblyInfoPath, "minor");
@@ -95,7 +95,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MajorOption()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -107,7 +107,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MinorAfterMajor()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -120,7 +120,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PatchAfterMinor2()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -134,7 +134,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PatchAfterMinorAgain()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -149,7 +149,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MinorAfterPatch()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -165,7 +165,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MajorTo2()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -182,7 +182,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MajorTo2Build1()
         {
             Bump.Calc(assemblyInfoPath, "major");
@@ -200,7 +200,7 @@ namespace MSBuild.SCM.Tasks.BumpVersion.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TaskTest()
         {
             BumpVersion t = new BumpVersion

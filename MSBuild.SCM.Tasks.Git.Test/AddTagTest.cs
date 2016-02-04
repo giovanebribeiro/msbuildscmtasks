@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
@@ -8,13 +8,13 @@ using System.Collections.Generic;
 namespace MSBuild.SCM.Tasks.Git.Test
 {
 
-    [TestClass]
+    [TestFixture]
     public class AddTagTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_AddTag";
 
-        [ClassInitialize]
-        public static void CreateDummyRepo(TestContext context)
+        [OneTimeSetUp]
+        public static void CreateDummyRepo()
         {
             if (Directory.Exists(dummyRepo))
             {
@@ -28,7 +28,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             ClientGit.Instance.ExecCommand("init " + dummyRepo);
         }
 
-        [TestMethod]
+        [Test]
         public void TagWithDefaultOptions()
         {
             // create a file and commit it:
@@ -48,7 +48,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.AreEqual("v0.0.0", output.Single(s => (s != null && s.Contains("v0.0.0"))));
         }
 
-        [TestMethod]
+        [Test]
         public void TagWithCustomPattern()
         {
             // create a file and commit it:
@@ -67,7 +67,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.AreEqual("r0.0.1", output.Single(s=>(s!=null && s.Contains("r0.0.1"))));
         }
 
-        [TestMethod]
+        [Test]
         public void TagWithCustomMessage()
         {
             // create a file and commit it:
@@ -87,7 +87,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
             Assert.IsTrue(line != null);
         }
 
-        [TestMethod]
+        [Test]
         public void TagWithVersionFromAssemblyInfo()
         {
             string assemblyInfoPath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\AssemblyTest.txt";
@@ -115,7 +115,7 @@ namespace MSBuild.SCM.Tasks.Git.Test
 
         }
 
-        [TestMethod]
+        [Test]
         public void AddTagTaskTest()
         {
             // create a file and commit it:

@@ -17,7 +17,7 @@
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
-		<DoubleQuotes>"</DoubleQuotes>		
+    <DoubleQuotes>"</DoubleQuotes>		
     <Bump Condition="'$(Bump)' == ''">patch</Bump>
     <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
     <NuGetPath>$(MSBuildProjectDirectory)\NuGet</NuGetPath>
@@ -67,11 +67,13 @@
 		/>
 
     <Message Text="* Execute Tests"/>
-    <PropertyGroup>
+    <!--PropertyGroup>
       <MSTestCommand>"$(MSTestPath)" @(TestAssemblies->'/testcontainer:"%(FullPath)"', ' ') /resultsfile:"@(TestResultsFile->'%(FullPath)')\Results.trx"</MSTestCommand>
-    </PropertyGroup>
+    </PropertyGroup-->
 
-    <Exec Command="$(MSTestCommand)" ContinueOnError="false"/>
+    <!--Exec Command="$(MSTestCommand)" ContinueOnError="false"/-->
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(ProgramFiles)\NUnit.org\nunit-console"/>
+    
 	</Target>
 
   <Target Name="PostCompile" DependsOnTargets="Compile" Condition="'$(Configuration)' == 'Release'">

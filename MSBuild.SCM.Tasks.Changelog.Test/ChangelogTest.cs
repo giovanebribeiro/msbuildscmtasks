@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using MSBuild.SCM.Tasks.Git.Client;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using MSBuild.SCM.Tasks.Changelog.Util;
 
 namespace MSBuild.SCM.Tasks.Changelog.Test
 {
-    [TestClass]
+    [TestFixture]
     public class ChangelogTest
     {
         private static string dummyRepo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyRepo_Changelog";
@@ -15,8 +15,8 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
         private static string dummyAssemblyInfo = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\DummyAssemblyInfo.cs";
         private static string dummyChangelog = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\CHANGELOG.md";        
 
-        [ClassInitialize]
-        public static void CreateAndPopulateDummyRepo(TestContext context)
+        [OneTimeSetUp]
+        public static void CreateAndPopulateDummyRepo()
         {
             #region eliminate the trash from last execution
             if (Directory.Exists(dummyRepo))
@@ -144,7 +144,7 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
             #endregion
         }
 
-        [TestMethod]
+        [Test]
         public void CreateChangelog()
         {
             ChangelogBuilder clb = new ChangelogBuilder
@@ -159,7 +159,7 @@ namespace MSBuild.SCM.Tasks.Changelog.Test
             Assert.IsTrue(File.Exists(dummyChangelog), "file not created");
         }
 
-        [TestMethod]
+        [Test]
         public void ChangelogTaskTest()
         {
             // update dummy assemblyInfo

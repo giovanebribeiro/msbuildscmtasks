@@ -41,6 +41,13 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -49,11 +56,7 @@
         <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
       </ItemGroup>
     </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
+    <Otherwise />
   </Choose>
   <ItemGroup>
     <Compile Include="BumpTest.cs" />
@@ -68,6 +71,9 @@
       <Project>{29b2a64f-312b-4d4a-a041-a2d387eb03d4}</Project>
       <Name>MSBuild.SCM.Tasks.Util</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
@@ -98,6 +104,7 @@
   
   -->
   <Import Project="$(MSBuildProjectDirectory)\..\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\..\.build\MSBuild.Community.Tasks.Targets" />
   <PropertyGroup>
     <!-- Temp folder to store temporarially the assemblies-->
     <TasksFolder>$(MSBuildThisFileDirectory)\tasks</TasksFolder>
@@ -111,11 +118,10 @@
     </ItemGroup>
     <Copy SourceFiles="@(BumpVersionAssemblies)" DestinationFolder="$(TasksFolder)" />
     <Message Text="* Test only the BumpVersion dll..." />
-    <PropertyGroup>
-      <BumpVersionTestDll>$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(AssemblyName).dll</BumpVersionTestDll>
-      <BumpTestCommand>"$(MSTestPath)" /testcontainer:"$(BumpVersionTestDll)"</BumpTestCommand>
-    </PropertyGroup>
-    <Exec Command="$(BumpTestCommand)" ContinueOnError="false" />
+    <ItemGroup>
+      <BumpVersionTestDll Include="$(MSBuildThisFileDirectory)\bin\$(Configuration)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <NUnit Assemblies="@(BumpVersionTestDll)" ToolPath="$(ProgramFiles)\NUnit.org\nunit-console" />
     <Message Text="* ... to bump the version of GeneralAssemblyInfo.cs" />
     <BumpVersion Option="$(Bump)" AssemblyInfoPath="$(MSBuildProjectDirectory)\..\GeneralAssemblyInfo.cs" />
   </Target>
