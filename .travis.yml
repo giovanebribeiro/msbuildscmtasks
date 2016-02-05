@@ -1,8 +1,10 @@
 language: csharp
 solution: Giovanebribeiro.MSBuild.SCM.Tasks.sln
-install:
+before_install:
+ - sudo apt-get install nunit-console
+before_script:
  - nuget restore Giovanebribeiro.MSBuild.SCM.Tasks.sln
- - nuget install NUnit.Runners -OutputDirectory testrunner
- - cp testrunner/NUnit.Console.3.0.1/tools/nunit3-console.exe testrunner/NUnit.Console.3.0.1/tools/nunit-console.exe 
-script:
- - xbuild build.proj /p:Configuration=Release /t:Compile
+after_script:
+  - nunit-console C:\workspace\msbuildscmtasks\MSBuild.SCM.Tasks.BumpVersion.Test\bin\Release\MSBuild.SCM.Tasks.BumpVersion.Test.dll 
+  - nunit-console C:\workspace\msbuildscmtasks\MSBuild.SCM.Tasks.Changelog.Test\bin\Release\MSBuild.SCM.Tasks.Changelog.Test.dll 
+  - nunit-console C:\workspace\msbuildscmtasks\MSBuild.SCM.Tasks.Git.Test\bin\Release\MSBuild.SCM.Tasks.Git.Test.dll 
