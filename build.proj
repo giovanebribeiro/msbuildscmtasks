@@ -73,7 +73,7 @@
     </PropertyGroup-->
 
     <!--Exec Command="$(MSTestCommand)" ContinueOnError="false"/-->
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(MSBuildProjectDirectory)\..\testrunner\NUnit.Console.3.0.1\tools"/>
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(MSBuildProjectDirectory)\testrunner\NUnit.Console.3.0.1\tools"/>
     
 	</Target>
 
