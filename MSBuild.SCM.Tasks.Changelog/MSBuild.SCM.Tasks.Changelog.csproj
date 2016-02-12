@@ -49,7 +49,6 @@
     <Compile Include="..\GeneralAssemblyInfo.cs">
       <Link>Properties\GeneralAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Changelog.cs" />
     <Compile Include="Util\ChangelogBuilder.cs" />
     <Compile Include="Util\ChangelogLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

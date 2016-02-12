@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSBuild.SCM.Tasks.BumpVersion
 {
-    public class Bump
+    public class BumpCalculator
     {
         public static string Calc(string assemblyInfoPath, string option)
         {

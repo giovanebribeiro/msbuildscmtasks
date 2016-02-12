@@ -19,9 +19,10 @@
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
 		<MSTestPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe</MSTestPath>
     <DoubleQuotes>"</DoubleQuotes>		
-    <Bump Condition="'$(Bump)' == ''">patch</Bump>
+    <BumpVersion Condition="'$(BumpVersion)' == ''">patch</BumpVersion>
     <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
     <NuGetPath>$(MSBuildProjectDirectory)\NuGet</NuGetPath>
+    <NUnitPath>$(MSBuildProjectDirectory)\testrunner\NUnit.Console.3.0.1\tools</NUnitPath>
 	</PropertyGroup>
 
   <!-- import the community tasks -->
@@ -30,8 +31,12 @@
   <!-- import this project -->
   <Import Project="MSBuild.SCM.Tasks.Targets"/>
 
+  <!-- import the opencover project -->
+  <Import Project="$(MSBuildExtensionsPath)\OpenCover\OpenCover.targets"/>
+  
+
   <!--Project tasks to be used-->
-  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersion\BumpVersion.Targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.BumpVersionVersion\BumpVersion.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Git\Git.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Changelog\Changelog.Targets"/>
   <Import Project="$(MSBuildProjectDirectory)\MSBuild.SCM.Tasks.Util\Util.Targets"/>
@@ -45,18 +50,18 @@
 	</Target>
 
   <Target Name="PreCompile" Condition="'$(Configuration)' == 'Release'">
-    <!--Variables to compile the bump version only-->
+    <!--Variables to compile the BumpVersion version only-->
 
     <PropertyGroup>
-      <BumpVersionTestProj>$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.BumpVersion.Test/MSBuild.SCM.Tasks.BumpVersion.Test.csproj</BumpVersionTestProj>
+      <BumpVersionVersionTestProj>$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.BumpVersionVersion.Test/MSBuild.SCM.Tasks.BumpVersionVersion.Test.csproj</BumpVersionVersionTestProj>
     </PropertyGroup>
 
     <!--
-    Compile the BumpVersion.Test project, to update the version of GeneralAssemblyInfo.cs
+    Compile the BumpVersionVersion.Test project, to update the version of GeneralAssemblyInfo.cs
     -->
     <MSBuild
-		Projects="$(BumpVersionTestProj)"
-		Properties="Configuration=$(Configuration);Bump=$(Bump);Platform=$(Platform);MSTestPath=$(MSTestPath);Flag=true"
+		Projects="$(BumpVersionVersionTestProj)"
+		Properties="Configuration=$(Configuration);BumpVersion=$(BumpVersion);Platform=$(Platform);MSTestPath=$(MSTestPath);Flag=true"
     />
   </Target>
 	
@@ -73,7 +78,15 @@
     </PropertyGroup-->
 
     <!--Exec Command="$(MSTestCommand)" ContinueOnError="false"/-->
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(MSBuildProjectDirectory)\testrunner\NUnit.Console.3.0.1\tools"/>
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(NUnitPath)"/>
+
+    <!-- Check Code Coverage -->     
+    <OpenCover Target="$(NUnitPath)\nunit-console.exe"
+      TargetArgs="$(MSBuildProjectDirectory)/MSBuild.SCM.Tasks.BumpVersionVersion.Test/bin/$(Configuration)/MSBuild.SCM.Tasks.BumpVersionVersion.Test.dll"
+      Filter="+[MSBuild.SCM.Tasks*]*"
+      Output="opencovertests.xml"
+    />
+    <!--Exec Command=".\tools\OpenCover.4.6.519\OpenCover.Console.exe -register:user -target:..\..\tools\NUnit\nunit-console.exe -targetargs:&quot;$(TestAssemblies) /xml=NUnitReport.xml /noshadow&quot; -filter:&quot;+[HelloWorld.Mvc3UI*]* -[HelloWorld.Mvc3UI.UnitTests*]*&quot; -output:OpenCoverReport.xml"></Exec-->
     
 	</Target>
 
@@ -155,7 +168,7 @@
     <Message Text="# "/>
     <Message Text="# Available properties (Values MUST be put without quotes of any kind):"/>
     <Message Text="# * Configuration='Debug|Release' (Default: Debug)"/>
-    <Message Text="# * Bump='major|minor|patch|build' (Default: patch)"/>
+    <Message Text="# * BumpVersion='major|minor|patch|build' (Default: patch)"/>
     <Message Text="# * NugetApiKeyFile='/path/to/nuget/api/file.txt'"/>
     <Message Text="# OBS: The nuget api file is just your nuget API key (available in your http://www.nuget.org account),"/>
     <Message Text="#      stored in a text file"/>
@@ -166,7 +179,7 @@
 		<Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
 		<Message Text="# | Clean                  |    -            | * Clean the old compiled files                      |"/>
 		<Message Text="# |------------------------|-----------------------------------------------------------------------|"/>
-    <Message Text="# | PreCompile (only       | Clean           | * Bump the version of GeneralAssemblyInfo.cs        |"/>
+    <Message Text="# | PreCompile (only       | Clean           | * BumpVersion the version of GeneralAssemblyInfo.cs        |"/>
     <Message Text="# |   executes if          |                 |                                                     |"/>
     <Message Text="# |   mode = 'Release'     |                 |                                                     |"/>
     <Message Text="# |------------------------|-----------------------------------------------------------------------|"/>

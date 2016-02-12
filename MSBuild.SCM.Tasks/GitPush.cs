@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.Git
+namespace MSBuild.SCM.Tasks
 {
     public class GitPush : Microsoft.Build.Utilities.Task
     {

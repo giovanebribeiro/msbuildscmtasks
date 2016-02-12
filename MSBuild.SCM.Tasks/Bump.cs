@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSBuild.SCM.Tasks.BumpVersion
+namespace MSBuild.SCM.Tasks
 {
-    public class BumpVersion:Microsoft.Build.Utilities.Task
+    public class Bump:Microsoft.Build.Utilities.Task
     {
         /// <summary>
         /// Path to AssemblyInfo.cs file
