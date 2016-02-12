@@ -67,7 +67,7 @@
     <Compile Include="..\GeneralAssemblyInfo.cs">
       <Link>Properties\GeneralAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Bump.cs" />
+    <Compile Include="BumpCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

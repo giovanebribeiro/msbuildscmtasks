@@ -85,6 +85,10 @@
       <Project>{29b2a64f-312b-4d4a-a041-a2d387eb03d4}</Project>
       <Name>MSBuild.SCM.Tasks.Util</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MSBuild.SCM.Tasks\MSBuild.SCM.Tasks.csproj">
+      <Project>{3e0a1813-9cab-48fa-bdc9-43086c335ded}</Project>
+      <Name>MSBuild.SCM.Tasks</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BumpVersion.cs" />
+    <Compile Include="Bump.cs" />
     <Compile Include="Changelog.cs" />
     <Compile Include="GitAdd.cs" />
     <Compile Include="GitAddTag.cs" />
